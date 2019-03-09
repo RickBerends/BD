@@ -1,0 +1,14 @@
+#voet { 
+clear: both;
+float: left;
+width: 934px;
+margin: 0 left;
+background-color: white;
+color: black;
+font-size: 60%;
+text-align: right;
+padding-top: 6px;
+padding-right: 6px;
+padding-left: 0px;
+padding-bottom: 6px;
+border: 1px solid black;

@@ -1,0 +1,145 @@
+* { 
+margin: 0;
+padding: 0;
+} 
+
+body { 
+margin: 0;
+background: #A0DCF8 url(duiven.png) repeat-y 1152px 0px;
+
+}
+
+#kop { 
+width: 1152px;
+height: 52px;
+margin: 0 left;
+background-color: grey;
+border-right: 1px solid black;
+border-left: 1px solid black;
+border-top: 1px solid black;
+} 
+
+#kop p {
+font-family: Verdana;
+font-size: 40px;
+font-weight: bold;
+text-align: center;
+margin: auto;
+color: white;
+font-variant: small-caps;
+padding-bottom:1px solid black
+padding-left:2px solid black
+padding-right:2px solid black
+
+}
+
+#midden { 
+width: 1152px;
+border-left: 1px solid black;
+border-right: 1px solid black;
+margin: 0 left;
+overflow: hidden;
+} 
+
+#menu { 
+height: 26px;
+width: 1152px;
+margin: 0 left;
+border-top: 1px solid black;
+border-left: 0px solid black;
+border-right: 0px solid black;
+border-bottom: 1px solid black;
+background-color: lightblue;
+} 
+
+#menu ul { 
+list-style-type: none;
+}
+
+#menu li { 
+float: left;
+width: 128px;
+}
+
+#menu li a {
+display: block;
+width: 127px;
+height: 22px;
+border-right: 0px solid black;
+padding-top: 4px;
+text-align: center;
+font-size: 14px;
+text-decoration: none;
+text-transform: uppercase;
+color: black;
+font-weight: bold;
+}
+
+#menu li a:hover {
+background-color: blue;
+}
+
+#menu li a li{ 
+clear:both;
+border-style: 1px solid black;
+} 
+
+#hoofdvak { 
+float: right;
+width: 942px;
+padding-left: 10px;
+padding-right: 10px;
+padding-top: 10px;
+padding-bottom: 10px;
+background-color: white;
+padding-bottom: 32000px;
+margin-bottom: -32000px;
+font-family: Arial;
+border-left: 1px solid black;
+border-bottom: 1px solid black;
+}
+
+#hoofdvak p {
+font-size: 100%;
+margin-bottom: 18px;
+}
+
+#hoofdvak ul, #hoofdvak ol {
+font-size: 100%;
+margin-bottom: 18px;
+margin-left: 0px;
+}
+
+#hoofdvak h1 {
+font-size: 100%;
+font-weight: bold;
+color: grey;
+margin-bottom: 6px;
+}
+
+#hoofdvak h2 {
+font-size: 80%;
+font-weight:bold ;
+color: black;
+margin-bottom: 6px;
+}
+
+#links_container{
+float: left;
+width: 169px;
+height: 360px;
+border-top: 0px solid black;
+border-right: 0px solid black;
+border-left: 0px solid black;
+border-bottom: 1px solid black;
+background-color: #ECECEC;
+padding-top: 10px;
+padding-right: 10px;
+padding-left: 10px;
+padding-bottom: 10px;
+}
+
+.nadruk {
+font-weight: bold;
+color: black;
+}
