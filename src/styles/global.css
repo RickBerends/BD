@@ -13,6 +13,12 @@
   --color-brass-soft: #cba85c;
   --color-border: #d9cbb0;
 
+  /* Chrome (header/footer) stays a fixed dark wood in both themes — it's
+     brand identity, not body content, so it never inverts with dark mode. */
+  --color-chrome-bg: #3b271c;
+  --color-chrome-text: #e9dfcd;
+  --color-chrome-text-muted: #cbbca7;
+
   --font-heading: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --font-body: 'Inter Variable', 'Inter', -apple-system, sans-serif;
 
@@ -143,8 +149,11 @@ img { max-width: 100%; height: auto; display: block; }
 .card {
   background: var(--color-bg-raised);
   border: 1px solid var(--color-border);
+  border-top: 2px solid var(--color-brass);
   border-radius: var(--radius);
   padding: var(--space-3);
+  box-shadow: 0 1px 3px rgba(36, 22, 16, 0.06);
+  transition: box-shadow 250ms ease, transform 250ms ease;
 }
 
 .section {
@@ -173,4 +182,53 @@ img { max-width: 100%; height: auto; display: block; }
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll-reveal: progressive enhancement only. Without JS (no .js-reveal on
+   <html>) every section stays fully visible — see BaseLayout's inline script. */
+:root.js-reveal .section:not(.hero) {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+:root.js-reveal .section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Paper-texture divider — decorative section separator only, never placed
+   behind reading text (briefing.md: "papiertexturen ... nooit achter leestekst"). */
+.paper-divider {
+  height: 3.5rem;
+  position: relative;
+  background-color: var(--color-bg-raised);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.paper-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5rem;
+  height: 1px;
+  background: var(--color-brass);
+  opacity: 0.5;
+}
+
+/* Pull quotes — plain markdown blockquotes get the "museum wall text" treatment */
+blockquote {
+  margin: var(--space-3) 0;
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-brass);
+  font-family: var(--font-heading);
+  font-size: var(--size-step-2);
+  font-style: italic;
+  color: var(--color-wood);
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
 }

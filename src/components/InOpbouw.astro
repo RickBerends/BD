@@ -1,23 +1,63 @@
 ---
 interface Props {
+  title?: string;
   message: string;
 }
-const { message } = Astro.props;
+const { title = 'Dit deel van het archief wordt binnenkort geopend', message } = Astro.props;
 ---
 
-<div class="in-opbouw card">
-  <p class="eyebrow">In opbouw</p>
-  <p>{message}</p>
+<div class="in-opbouw">
+  <div class="ornament" aria-hidden="true">
+    <span class="ornament-line"></span>
+    <span class="ornament-mark">&#10022;</span>
+    <span class="ornament-line"></span>
+  </div>
+  <p class="eyebrow">In wording</p>
+  <h2>{title}</h2>
+  <p class="message">{message}</p>
 </div>
 
 <style>
   .in-opbouw {
-    max-width: 60ch;
-    border-style: dashed;
+    max-width: 56ch;
+    padding: var(--space-4) var(--space-3);
+    text-align: center;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
   }
 
-  .in-opbouw p:last-child {
-    margin: 0;
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .ornament-line {
+    height: 1px;
+    width: 2.5rem;
+    background: var(--color-brass);
+    opacity: 0.6;
+  }
+
+  .ornament-mark {
+    color: var(--color-brass);
+    font-size: 1rem;
+  }
+
+  .in-opbouw h2 {
+    font-size: var(--size-step-2);
+    margin-bottom: var(--space-1);
+  }
+
+  .in-opbouw .eyebrow {
+    display: block;
+  }
+
+  .in-opbouw .message {
     color: var(--color-ink-soft);
+    margin: 0 auto;
   }
 </style>

@@ -1,0 +1,69 @@
+---
+import { getEntry } from 'astro:content';
+import { withBase } from '../utils/url';
+
+interface Props {
+  duivenIds?: string[];
+  bloedlijnId?: string;
+}
+
+const { duivenIds = [], bloedlijnId } = Astro.props;
+
+const duiven = (
+  await Promise.all(duivenIds.map((id) => getEntry('duiven', id)))
+).filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+
+const bloedlijn = bloedlijnId ? await getEntry('bloedlijnen', bloedlijnId) : undefined;
+
+const hasContent = duiven.length > 0 || Boolean(bloedlijn);
+---
+
+{hasContent && (
+  <aside class="related-entries" aria-label="Gerelateerd in het archief">
+    <p class="eyebrow">Verder in het archief</p>
+    <ul>
+      {duiven.map((duif) => (
+        <li>
+          <a href={withBase(`/duiven/${duif.id}/`)}>Duif: {duif.data.naam}</a>
+        </li>
+      ))}
+      {bloedlijn && (
+        <li>
+          <a href={withBase('/bloedlijnen/')}>Bloedlijn: {bloedlijn.data.naam}</a>
+        </li>
+      )}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .related-entries {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .related-entries ul {
+    list-style: none;
+    margin: var(--space-1) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .related-entries a {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    color: var(--color-wood);
+  }
+
+  .related-entries a:hover {
+    border-color: var(--color-brass);
+    color: var(--color-brass);
+  }
+</style>

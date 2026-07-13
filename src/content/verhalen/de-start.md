@@ -24,7 +24,11 @@ Vragen waar ik mee blijf zitten:
 8. Had ik de duiven misschien meer moeten invliegen, met nog een extra trainingsvlucht vlak voor het inkorven?
 9. Waarom had ik geen van mijn getekende duiven op tijd? Juist deze duiven hebben eerder bewezen de Marathonvluchten aan te kunnen.
 
-Kortom, genoeg vragen om me de komende tijd mee bezig te houden. Duivensport is ook hopen dat het de volgende vlucht beter gaat. Vanuit Winning hoop ik van collega-auteurs nog lang leerzame artikelen te mogen lezen, zodat ik mogelijk op alle vragen een antwoord krijg. Als het goed gaat, is duivensport eenvoudig. Valt het tegen, dan is het zoeken naar hoe het beter moet — en ik denk dat veel mensen met die zoektocht bezig zijn.
+Kortom, genoeg vragen om me de komende tijd mee bezig te houden.
+
+> Duivensport is ook hopen dat het de volgende vlucht beter gaat.
+
+Vanuit Winning hoop ik van collega-auteurs nog lang leerzame artikelen te mogen lezen, zodat ik mogelijk op alle vragen een antwoord krijg. Als het goed gaat, is duivensport eenvoudig. Valt het tegen, dan is het zoeken naar hoe het beter moet — en ik denk dat veel mensen met die zoektocht bezig zijn.
 
 De eerste jonge duiven zijn in hun nieuwe onderkomen gezet: een hokje met daaraan een ren. Nieuwe hoop voor de toekomst!
 

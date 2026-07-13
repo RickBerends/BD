@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedEntries from '../../components/RelatedEntries.astro';
 import { withBase } from '../../utils/url';
 
 export async function getStaticPaths() {
@@ -34,6 +35,7 @@ const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.da
       <article class="prose">
         <h1>{item.data.title}</h1>
         <Content />
+        <RelatedEntries duivenIds={item.data.gerelateerdeDuiven} bloedlijnId={item.data.gerelateerdeBloedlijn} />
       </article>
     </div>
   </section>

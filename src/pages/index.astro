@@ -6,6 +6,7 @@ import henkPortret from '../assets/henk-berends.webp';
 import { withBase } from '../utils/url';
 
 const prestaties = (await getCollection('prestaties')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+const uitgelicht = prestaties.slice(0, 2);
 ---
 
 <BaseLayout
@@ -28,17 +29,22 @@ const prestaties = (await getCollection('prestaties')).sort((a, b) => a.data.vol
         </div>
       </div>
       <div class="hero-image">
-        <Image src={henkPortret} alt="Henk Berends jr. met een van de duiven" width={420} loading="eager" />
+        <figure class="portrait-frame">
+          <Image src={henkPortret} alt="Henk Berends jr. met een van de duiven" width={420} loading="eager" />
+          <figcaption>Henk Berends jr. &mdash; huidige generatie</figcaption>
+        </figure>
       </div>
     </div>
   </section>
+
+  <div class="paper-divider" aria-hidden="true"></div>
 
   <section class="section section--muted">
     <div class="container">
       <p class="eyebrow">Belangrijkste momenten</p>
       <h2>Een stam die geschiedenis heeft geschreven</h2>
       <ol class="timeline">
-        {prestaties.map((p) => (
+        {uitgelicht.map((p) => (
           <li class="timeline-item card">
             <span class="timeline-niveau">{p.data.niveau}</span>
             <h3>{p.data.titel}</h3>
@@ -46,7 +52,7 @@ const prestaties = (await getCollection('prestaties')).sort((a, b) => a.data.vol
           </li>
         ))}
       </ol>
-      <p><a href={withBase('/familie/')}>Lees het volledige familieverhaal &rarr;</a></p>
+      <p><a href={withBase('/familie/')}>Bekijk de volledige erelijst en het familieverhaal &rarr;</a></p>
     </div>
   </section>
 
@@ -113,9 +119,26 @@ const prestaties = (await getCollection('prestaties')).sort((a, b) => a.data.vol
     margin-top: var(--space-3);
   }
 
-  .hero-image img {
-    border-radius: var(--radius);
+  .portrait-frame {
+    margin: 0;
+    padding: 0.6rem;
+    background: var(--color-bg-raised);
     border: 1px solid var(--color-border);
+    box-shadow: 0 6px 20px rgba(36, 22, 16, 0.12);
+  }
+
+  .portrait-frame img {
+    border: 1px solid var(--color-brass);
+    display: block;
+  }
+
+  .portrait-frame figcaption {
+    padding-top: 0.6rem;
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-soft);
+    font-style: italic;
   }
 
   .timeline {

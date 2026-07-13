@@ -21,7 +21,10 @@ const bloedlijnen = await getCollection('bloedlijnen');
       </p>
 
       {bloedlijnen.length === 0 ? (
-        <InOpbouw message="Deze sectie groeit zodra er voldoende gekoppelde duivenprofielen in het archief staan. Bekijk ondertussen de kennisbank voor de achterliggende fokfilosofie." />
+        <InOpbouw
+          title="De stamboom wordt uitgetekend"
+          message="Zodra er voldoende gekoppelde duivenprofielen in het archief staan, verschijnen de eerste bloedlijnen hier. Bekijk ondertussen de kennisbank voor de achterliggende fokfilosofie."
+        />
       ) : (
         <div class="card-grid">
           {bloedlijnen.map((lijn) => (

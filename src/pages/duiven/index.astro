@@ -21,7 +21,10 @@ const duiven = await getCollection('duiven');
       </p>
 
       {duiven.length === 0 ? (
-        <InOpbouw message="De eerste duivenprofielen worden binnenkort samen met Henk Berends ingevoerd. Kom binnenkort terug voor de eerste duiven uit de stam." />
+        <InOpbouw
+          title="De eerste duiven worden binnengehaald"
+          message="Samen met Henk Berends worden de eerste profielen ingevoerd: ringnummer, afkomst, verhaal en prestaties per duif. Kom binnenkort terug voor de eerste kamers van deze galerij."
+        />
       ) : (
         <div class="card-grid">
           {duiven.map((duif) => (

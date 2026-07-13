@@ -3,6 +3,11 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import media1 from '../../assets/media-1.webp';
 import media2 from '../../assets/media-2.webp';
+
+const items = [
+  { src: media1, alt: 'Vermelding van Henk Berends', caption: 'Onderschrift volgt zodra de context met Henk is besproken.' },
+  { src: media2, alt: 'Vermelding van Henk Berends', caption: 'Onderschrift volgt zodra de context met Henk is besproken.' },
+];
 ---
 
 <BaseLayout title="Media" description="Een greep uit de vermeldingen en beelden van Henk Berends en de Berends duiven.">
@@ -13,12 +18,12 @@ import media2 from '../../assets/media-2.webp';
       <p class="lead">Een greep uit de recente vermeldingen van Henk Berends.</p>
 
       <div class="media-grid">
-        <figure class="card">
-          <Image src={media1} alt="Vermelding van Henk Berends" width={500} />
-        </figure>
-        <figure class="card">
-          <Image src={media2} alt="Vermelding van Henk Berends" width={500} />
-        </figure>
+        {items.map((item) => (
+          <figure class="card">
+            <Image src={item.src} alt={item.alt} width={500} />
+            <figcaption>{item.caption}</figcaption>
+          </figure>
+        ))}
       </div>
     </div>
   </section>
@@ -44,5 +49,12 @@ import media2 from '../../assets/media-2.webp';
 
   .media-grid img {
     border-radius: var(--radius);
+  }
+
+  .media-grid figcaption {
+    padding-top: 0.6rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-ink-soft);
   }
 </style>

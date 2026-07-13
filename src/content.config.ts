@@ -5,6 +5,10 @@ import { glob } from 'astro/loaders';
 // keten uit context/briefing.md, als lokale collecties (zie context/plan.md §3
 // voor het toekomstige Sanity-schema waar dit 1-op-1 naar migreert).
 
+// gerelateerdeDuiven/gerelateerdeBloedlijn verwijzen naar entry-id's (bestandsnaam
+// zonder extensie) in de duiven/bloedlijnen-collecties. Optioneel en leeg tot die
+// collecties content hebben — zie RelatedEntries.astro, dat vanzelf niets toont
+// zolang de verwezen id's nog niet bestaan.
 const verhalen = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/verhalen' }),
   schema: z.object({
@@ -13,6 +17,8 @@ const verhalen = defineCollection({
     date: z.coerce.date(),
     category: z.enum(['geschiedenis', 'training', 'wedvlucht-verslag']),
     excerpt: z.string(),
+    gerelateerdeDuiven: z.array(z.string()).optional(),
+    gerelateerdeBloedlijn: z.string().optional(),
   }),
 });
 
@@ -22,6 +28,8 @@ const kennis = defineCollection({
     title: z.string(),
     order: z.number(),
     excerpt: z.string(),
+    gerelateerdeDuiven: z.array(z.string()).optional(),
+    gerelateerdeBloedlijn: z.string().optional(),
   }),
 });
 

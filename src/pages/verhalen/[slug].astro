@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedEntries from '../../components/RelatedEntries.astro';
 import { withBase } from '../../utils/url';
 
 export async function getStaticPaths() {
@@ -23,6 +24,7 @@ const formatter = new Intl.DateTimeFormat('nl-NL', { year: 'numeric', month: 'lo
       <h1>{verhaal.data.title}</h1>
       <p class="story-author">door {verhaal.data.author}</p>
       <Content />
+      <RelatedEntries duivenIds={verhaal.data.gerelateerdeDuiven} bloedlijnId={verhaal.data.gerelateerdeBloedlijn} />
       <p><a href={withBase('/verhalen/')}>&larr; Terug naar alle verhalen</a></p>
     </div>
   </section>

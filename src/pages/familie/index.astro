@@ -33,12 +33,14 @@ const { Content: HuidigeContent } = huidigeGeneratie ? await render(huidigeGener
         <p class="eyebrow">Grondlegger</p>
         <h2>{grondlegger.data.naam}</h2>
         <p class="periode">{grondlegger.data.periode}</p>
-        <div class="prose">
+        <div class="prose prose--intro">
           <GrondleggerContent />
         </div>
       </div>
     </section>
   )}
+
+  <div class="paper-divider" aria-hidden="true"></div>
 
   {huidigeGeneratie && (
     <section class="section">
@@ -101,6 +103,15 @@ const { Content: HuidigeContent } = huidigeGeneratie ? await render(huidigeGener
 
   .prose :global(p) {
     margin-bottom: var(--space-2);
+  }
+
+  .prose--intro :global(p:first-of-type::first-letter) {
+    font-family: var(--font-heading);
+    font-size: 3.2rem;
+    line-height: 0.8;
+    float: left;
+    padding: 0.1rem 0.4rem 0 0;
+    color: var(--color-brass);
   }
 
   .timeline {

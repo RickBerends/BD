@@ -1,0 +1,98 @@
+---
+import { withBase } from '../utils/url';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const sectionLabels: Record<string, string> = {
+  familie: 'Familie',
+  kennis: 'Kennis',
+  duiven: 'Duiven',
+  bloedlijnen: 'Bloedlijnen',
+  veiling: 'Veiling',
+  'generaties-van-morgen': 'Toekomst',
+  verhalen: 'Verhalen',
+  media: 'Media',
+  contact: 'Contact',
+  zoeken: 'Zoeken',
+};
+
+const base = import.meta.env.BASE_URL;
+const rel = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.length - 1) : Astro.url.pathname;
+const segments = rel.split('/').filter(Boolean);
+
+const crumbs: { label: string; href?: string }[] = [{ label: 'Home', href: '/' }];
+
+if (segments.length > 0 && segments[0] !== '404') {
+  const [section, ...rest] = segments;
+  const sectionLabel = sectionLabels[section] ?? section;
+  if (rest.length === 0) {
+    crumbs.push({ label: sectionLabel });
+  } else {
+    crumbs.push({ label: sectionLabel, href: `/${section}/` });
+    crumbs.push({ label: title });
+  }
+}
+---
+
+{crumbs.length > 1 && (
+  <nav class="breadcrumbs" aria-label="Kruimelpad">
+    <ol>
+      {crumbs.map((crumb, i) => (
+        <li>
+          {crumb.href && i !== crumbs.length - 1 ? (
+            <a href={withBase(crumb.href)}>{crumb.label}</a>
+          ) : (
+            <span aria-current="page">{crumb.label}</span>
+          )}
+          {i < crumbs.length - 1 && <span class="sep" aria-hidden="true">/</span>}
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .breadcrumbs {
+    padding: var(--space-2) 0 0;
+  }
+
+  .breadcrumbs ol {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-3);
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--color-ink-soft);
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .breadcrumbs a {
+    color: var(--color-ink-soft);
+    text-decoration-color: var(--color-border);
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--color-brass);
+  }
+
+  .breadcrumbs span[aria-current="page"] {
+    color: var(--color-wood);
+    font-weight: 600;
+  }
+
+  .breadcrumbs .sep {
+    color: var(--color-border);
+  }
+</style>
