@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InOpbouw from '../../components/InOpbouw.astro';
+
+const bloedlijnen = await getCollection('bloedlijnen');
+---
+
+<BaseLayout
+  title="Bloedlijnen"
+  description="De stambomen achter de Berends duiven: welke combinaties zijn gemaakt en welke eigenschappen worden doorgegeven."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">De stam</p>
+      <h1>Bloedlijnen</h1>
+      <p class="lead">
+        Een interactieve stamboom is de kennisstructuur waar deze website naartoe groeit &mdash;
+        niet alleen namen, maar inzicht: waarom is deze combinatie gemaakt, en welke eigenschappen
+        worden doorgegeven?
+      </p>
+
+      {bloedlijnen.length === 0 ? (
+        <InOpbouw message="Deze sectie groeit zodra er voldoende gekoppelde duivenprofielen in het archief staan. Bekijk ondertussen de kennisbank voor de achterliggende fokfilosofie." />
+      ) : (
+        <div class="card-grid">
+          {bloedlijnen.map((lijn) => (
+            <div class="card">
+              <h2>{lijn.data.naam}</h2>
+              <p>{lijn.data.oorsprong}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  message: string;
+}
+const { message } = Astro.props;
+---
+
+<div class="in-opbouw card">
+  <p class="eyebrow">In opbouw</p>
+  <p>{message}</p>
+</div>
+
+<style>
+  .in-opbouw {
+    max-width: 60ch;
+    border-style: dashed;
+  }
+
+  .in-opbouw p:last-child {
+    margin: 0;
+    color: var(--color-ink-soft);
+  }
+</style>

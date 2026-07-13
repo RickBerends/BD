@@ -1,0 +1,177 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import henkPortret from '../assets/henk-berends.webp';
+import { withBase } from '../utils/url';
+
+const prestaties = (await getCollection('prestaties')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+---
+
+<BaseLayout
+  title="Berends Duiven"
+  description="Ontdek de geschiedenis achter de Berends duiven: een marathon-postduivenfamilie uit Tilburg en Giesbeek, van grondlegger tot huidige generatie."
+>
+  <section class="hero">
+    <div class="container hero-grid fade-in">
+      <div class="hero-copy">
+        <p class="eyebrow">Een duivenfamilie, sinds Giesbeek</p>
+        <h1>Ontdek de geschiedenis achter één van de meest bevlogen duivenfamilies.</h1>
+        <p class="hero-lead">
+          Het verheugt ons zeer u te mogen begroeten op de site van Berends Duiven. Kennismaken met
+          alles rondom kweken en spelen op de Marathonvluchten &mdash; voor deze familie topsport,
+          al drie generaties lang.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href={withBase('/familie/')}>Het familieverhaal</a>
+          <a class="button button--outline" href={withBase('/kennis/')}>De aanpak</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <Image src={henkPortret} alt="Henk Berends jr. met een van de duiven" width={420} loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container">
+      <p class="eyebrow">Belangrijkste momenten</p>
+      <h2>Een stam die geschiedenis heeft geschreven</h2>
+      <ol class="timeline">
+        {prestaties.map((p) => (
+          <li class="timeline-item card">
+            <span class="timeline-niveau">{p.data.niveau}</span>
+            <h3>{p.data.titel}</h3>
+            <p class="timeline-periode">{p.data.periode ?? p.data.jaar}</p>
+          </li>
+        ))}
+      </ol>
+      <p><a href={withBase('/familie/')}>Lees het volledige familieverhaal &rarr;</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Verken het archief</p>
+      <h2>De huidige generatie bouwt door</h2>
+      <div class="card-grid">
+        <a class="card link-card" href={withBase('/duiven/')}>
+          <h3>De Duiven</h3>
+          <p>Een groeiende galerij van erfgoed &mdash; elke duif met foto, afkomst en verhaal.</p>
+        </a>
+        <a class="card link-card" href={withBase('/bloedlijnen/')}>
+          <h3>De Bloedlijnen</h3>
+          <p>Welke combinaties zijn gemaakt, en welke eigenschappen worden doorgegeven.</p>
+        </a>
+        <a class="card link-card" href={withBase('/verhalen/')}>
+          <h3>Verhalen</h3>
+          <p>Wedvluchtverslagen en beschouwingen, geschreven door Henk Berends zelf.</p>
+        </a>
+        <a class="card link-card" href={withBase('/veiling/')}>
+          <h3>De Veiling</h3>
+          <p>Een unieke kans om eigenaar te worden van een stukje levende historie.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: var(--space-5) 0;
+    background: linear-gradient(180deg, var(--color-bg-raised), var(--color-bg));
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  @media (max-width: 800px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-image {
+      order: -1;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+  }
+
+  .hero-lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 60ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-top: var(--space-3);
+  }
+
+  .hero-image img {
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+  }
+
+  .timeline {
+    list-style: none;
+    margin: var(--space-3) 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-2);
+  }
+
+  .timeline-item h3 {
+    font-size: var(--size-step-1);
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-niveau {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--color-brass);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-periode {
+    color: var(--color-ink-soft);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .link-card {
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .link-card:hover {
+    border-color: var(--color-brass);
+    transform: translateY(-2px);
+  }
+
+  .link-card h3 {
+    color: var(--color-wood);
+  }
+
+  .link-card p {
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+</style>

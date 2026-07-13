@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../utils/url';
+---
+
+<BaseLayout title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer).">
+  <section class="section not-found">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>Deze pagina bestaat niet (meer)</h1>
+      <p class="lead">
+        Mogelijk is de website inmiddels herbouwd en is deze pagina verplaatst. Ga terug naar de
+        homepage, of bekijk het familieverhaal.
+      </p>
+      <div class="actions">
+        <a class="button" href={withBase('/')}>Naar de homepage</a>
+        <a class="button button--outline" href={withBase('/familie/')}>Het familieverhaal</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    text-align: center;
+    padding: var(--space-5) 0;
+  }
+
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 55ch;
+    margin: 0 auto var(--space-3);
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

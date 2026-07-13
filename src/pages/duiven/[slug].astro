@@ -1,0 +1,63 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const duiven = await getCollection('duiven');
+  return duiven.map((duif) => ({
+    params: { slug: duif.id },
+    props: { duif },
+  }));
+}
+
+const { duif } = Astro.props;
+const { Content } = await render(duif);
+const vader = duif.data.vader ? await getEntry('duiven', duif.data.vader) : undefined;
+const moeder = duif.data.moeder ? await getEntry('duiven', duif.data.moeder) : undefined;
+---
+
+<BaseLayout title={duif.data.naam} description={`Ringnummer ${duif.data.ringnummer} — ${duif.data.naam}`}>
+  <section class="section">
+    <div class="container prose">
+      <p class="eyebrow">{duif.data.ringnummer}</p>
+      <h1>{duif.data.naam}</h1>
+      <dl class="specs">
+        <div><dt>Geslacht</dt><dd>{duif.data.geslacht}</dd></div>
+        {duif.data.kleur && <div><dt>Kleur</dt><dd>{duif.data.kleur}</dd></div>}
+        {duif.data.geboortejaar && <div><dt>Geboortejaar</dt><dd>{duif.data.geboortejaar}</dd></div>}
+        {vader && <div><dt>Vader</dt><dd>{vader.data.naam}</dd></div>}
+        {moeder && <div><dt>Moeder</dt><dd>{moeder.data.naam}</dd></div>}
+      </dl>
+      <Content />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prose {
+    max-width: 70ch;
+  }
+
+  .specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+    padding: var(--space-2);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .specs dt {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-brass);
+  }
+
+  .specs dd {
+    margin: 0;
+    font-weight: 600;
+  }
+</style>

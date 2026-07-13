@@ -1,0 +1,52 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = title === 'Berends Duiven' ? title : `${title} — Berends Duiven`;
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2214%22 fill=%22%233b271c%22/><text x=%2250%22 y=%2266%22 font-size=%2248%22 font-family=%22Georgia,serif%22 fill=%22%23cba85c%22 text-anchor=%22middle%22>BD</text></svg>" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Ga naar de inhoud</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <style>
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: var(--color-brass);
+        color: var(--color-wood-dark);
+        padding: 0.75rem 1.25rem;
+        z-index: 100;
+        font-weight: 600;
+      }
+      .skip-link:focus {
+        left: var(--space-2);
+        top: var(--space-2);
+      }
+    </style>
+  </body>
+</html>

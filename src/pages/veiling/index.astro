@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InOpbouw from '../../components/InOpbouw.astro';
+import { withBase } from '../../utils/url';
+---
+
+<BaseLayout
+  title="Veiling"
+  description="De veiling van Berends Duiven: elke verkoop vertelt een verhaal over een lijn die tientallen jaren zorgvuldig is opgebouwd."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">De Veiling</p>
+      <h1>Een unieke kans om eigenaar te worden van levende historie</h1>
+      <p class="lead">
+        Een veiling is een moment waarop een bijzonder stuk geschiedenis een nieuwe eigenaar krijgt.
+        Niet: <em>&ldquo;product X, prijs Y.&rdquo;</em> Maar: deze duif vertegenwoordigt een lijn
+        die tientallen jaren zorgvuldig is opgebouwd. De vraag is niet hoeveel een duif kost, maar
+        welke toekomst deze duif kan betekenen voor uw hok.
+      </p>
+
+      <InOpbouw message="De veilingmodule volgt zodra er duiven met voldoende afkomstgegevens beschikbaar zijn. Interesse in een toekomstige veiling of in een specifieke lijn? Neem gerust contact op." />
+
+      <p><a class="button" href={withBase('/contact/')}>Neem contact op &rarr;</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+    margin-bottom: var(--space-3);
+  }
+</style>

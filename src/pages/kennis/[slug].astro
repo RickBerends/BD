@@ -1,0 +1,86 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
+
+export async function getStaticPaths() {
+  const items = await getCollection('kennis');
+  return items.map((item) => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title={item.data.title} description={item.data.excerpt}>
+  <section class="section">
+    <div class="container layout">
+      <aside class="kennis-nav" aria-label="Kennis-onderwerpen">
+        <p class="eyebrow">Kennisbank</p>
+        <ul>
+          {items.map((i) => (
+            <li>
+              <a href={withBase(`/kennis/${i.id}/`)} aria-current={i.id === item.id ? 'page' : undefined}>
+                {i.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+      <article class="prose">
+        <h1>{item.data.title}</h1>
+        <Content />
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .kennis-nav ul {
+    list-style: none;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+  }
+
+  .kennis-nav a {
+    display: block;
+    padding: 0.5rem 0;
+    text-decoration: none;
+    color: var(--color-ink-soft);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .kennis-nav a[aria-current="page"] {
+    color: var(--color-brass);
+    font-weight: 700;
+  }
+
+  .prose {
+    max-width: 70ch;
+  }
+
+  .prose :global(h2) {
+    margin-top: var(--space-3);
+  }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-2);
+  }
+</style>

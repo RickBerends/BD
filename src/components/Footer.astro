@@ -1,0 +1,86 @@
+---
+import { withBase } from '../utils/url';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="footer-brand">Berends Duiven</p>
+      <p class="footer-tag">Een digitaal erfgoedplatform voor een marathon-duivenfamilie uit Tilburg.</p>
+    </div>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href={withBase('/familie/')}>Familie</a></li>
+        <li><a href={withBase('/kennis/')}>Kennis</a></li>
+        <li><a href={withBase('/duiven/')}>Duiven</a></li>
+        <li><a href={withBase('/verhalen/')}>Verhalen</a></li>
+        <li><a href={withBase('/contact/')}>Contact</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="footer-contact">Henk Berends &mdash; H.E.Th. Berends, Tilburg</p>
+      <p><a href="mailto:HenkBerends@ziggo.nl">HenkBerends@ziggo.nl</a></p>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>&copy; {year} Berends Duiven. Alle rechten voorbehouden.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-wood);
+    color: #cbbca7;
+    margin-top: var(--space-5);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-3);
+  }
+
+  @media (max-width: 700px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+
+  .footer-brand {
+    font-family: var(--font-heading);
+    color: var(--color-bg-raised);
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-tag {
+    max-width: 32ch;
+  }
+
+  .footer-footer nav ul,
+  .site-footer nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .site-footer a {
+    color: #e9dfcd;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(233, 223, 205, 0.15);
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.85rem;
+  }
+
+  .footer-bottom p {
+    margin: 0;
+  }
+</style>

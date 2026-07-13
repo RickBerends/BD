@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import media1 from '../../assets/media-1.webp';
+import media2 from '../../assets/media-2.webp';
+---
+
+<BaseLayout title="Media" description="Een greep uit de vermeldingen en beelden van Henk Berends en de Berends duiven.">
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">In beeld</p>
+      <h1>Media</h1>
+      <p class="lead">Een greep uit de recente vermeldingen van Henk Berends.</p>
+
+      <div class="media-grid">
+        <figure class="card">
+          <Image src={media1} alt="Vermelding van Henk Berends" width={500} />
+        </figure>
+        <figure class="card">
+          <Image src={media2} alt="Vermelding van Henk Berends" width={500} />
+        </figure>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .media-grid figure {
+    margin: 0;
+  }
+
+  .media-grid img {
+    border-radius: var(--radius);
+  }
+</style>

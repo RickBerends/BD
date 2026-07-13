@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InOpbouw from '../../components/InOpbouw.astro';
+import { withBase } from '../../utils/url';
+
+const duiven = await getCollection('duiven');
+---
+
+<BaseLayout
+  title="Duiven"
+  description="Een galerij van erfgoed: elke duif van Berends Duiven met afkomst, verhaal en prestaties."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">De galerij</p>
+      <h1>De duiven</h1>
+      <p class="lead">
+        Geen productcatalogus, maar een galerij van erfgoed. Elke duif krijgt hier een eigen
+        profiel: foto, afkomst, verhaal, prestaties en betekenis binnen de stam.
+      </p>
+
+      {duiven.length === 0 ? (
+        <InOpbouw message="De eerste duivenprofielen worden binnenkort samen met Henk Berends ingevoerd. Kom binnenkort terug voor de eerste duiven uit de stam." />
+      ) : (
+        <div class="card-grid">
+          {duiven.map((duif) => (
+            <a class="card link-card" href={withBase(`/duiven/${duif.id}/`)}>
+              <h2>{duif.data.naam}</h2>
+              <p>{duif.data.ringnummer}</p>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .link-card {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>

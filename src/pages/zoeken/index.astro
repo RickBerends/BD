@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
+
+const bundlePath = withBase('/pagefind/');
+---
+
+<BaseLayout title="Zoeken" description="Doorzoek het archief van Berends Duiven.">
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Archief</p>
+      <h1>Zoeken</h1>
+      <p class="lead">Doorzoek het familieverhaal, de kennisbank en de verhalen.</p>
+      <div id="search" class="search-root"></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<link href={withBase('/pagefind/pagefind-ui.css')} rel="stylesheet" />
+<script define:vars={{ bundlePath }}>
+  async function initSearch() {
+    try {
+      await import(/* @vite-ignore */ `${bundlePath}pagefind-ui.js`);
+      new window.PagefindUI({ element: '#search', bundlePath, showSubResults: true });
+    } catch (err) {
+      const el = document.getElementById('search');
+      if (el) {
+        el.innerHTML =
+          '<p>De zoekindex is nog niet beschikbaar op deze omgeving. Bouw en publiceer de site (npm run build) om te zoeken.</p>';
+      }
+    }
+  }
+  initSearch();
+</script>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .search-root {
+    max-width: 640px;
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
+
+export async function getStaticPaths() {
+  const verhalen = await getCollection('verhalen');
+  return verhalen.map((verhaal) => ({
+    params: { slug: verhaal.id },
+    props: { verhaal },
+  }));
+}
+
+const { verhaal } = Astro.props;
+const { Content } = await render(verhaal);
+const formatter = new Intl.DateTimeFormat('nl-NL', { year: 'numeric', month: 'long' });
+---
+
+<BaseLayout title={verhaal.data.title} description={verhaal.data.excerpt}>
+  <section class="section">
+    <div class="container prose">
+      <p class="eyebrow">{verhaal.data.category} &middot; {formatter.format(verhaal.data.date)}</p>
+      <h1>{verhaal.data.title}</h1>
+      <p class="story-author">door {verhaal.data.author}</p>
+      <Content />
+      <p><a href={withBase('/verhalen/')}>&larr; Terug naar alle verhalen</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prose {
+    max-width: 70ch;
+  }
+
+  .story-author {
+    font-style: italic;
+    color: var(--color-ink-soft);
+    margin-bottom: var(--space-3);
+  }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose :global(ol),
+  .prose :global(ul) {
+    margin-bottom: var(--space-2);
+    padding-left: 1.5rem;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+</style>

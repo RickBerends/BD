@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
+
+const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Kennis"
+  description="De aanpak achter de Berends duiven: koppelen, africhten, voeding en motivatie, opgebouwd uit jarenlange ervaring op de Marathonvluchten."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Kennisbank</p>
+      <h1>De aanpak</h1>
+      <p class="lead">
+        Geen standaardsysteem, en ook niet ingewikkeld. Het uitgangspunt is steeds hetzelfde: de
+        duiven passen zich aan het systeem aan &mdash; opgebouwd, aangepast en bijgeschaafd in vele
+        jaren duivensport.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--muted">
+    <div class="container card-grid">
+      {items.map((item) => (
+        <a class="card link-card" href={withBase(`/kennis/${item.id}/`)}>
+          <h2>{item.data.title}</h2>
+          <p>{item.data.excerpt}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .link-card {
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .link-card:hover {
+    border-color: var(--color-brass);
+    transform: translateY(-2px);
+  }
+
+  .link-card h2 {
+    font-size: var(--size-step-1);
+  }
+
+  .link-card p {
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+</style>

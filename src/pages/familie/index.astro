@@ -1,0 +1,138 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
+
+const fanciers = await getCollection('fanciers');
+const grondlegger = fanciers.find((f) => f.data.rol === 'grondlegger');
+const huidigeGeneratie = fanciers.find((f) => f.data.rol === 'huidige generatie');
+const prestaties = (await getCollection('prestaties')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+
+const { Content: GrondleggerContent } = grondlegger ? await render(grondlegger) : { Content: null };
+const { Content: HuidigeContent } = huidigeGeneratie ? await render(huidigeGeneratie) : { Content: null };
+---
+
+<BaseLayout
+  title="Familie"
+  description="Het digitale familieboek van Berends Duiven: oorsprong, grondlegger, generaties en de huidige generatie."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Het familieboek</p>
+      <h1>De familie Berends</h1>
+      <p class="lead">
+        Waar komt deze stam vandaan? Welke mensen hebben de basis gelegd? Dit is het verhaal van
+        twee generaties Berends, verbonden door dezelfde Marathonvluchten.
+      </p>
+    </div>
+  </section>
+
+  {grondlegger && (
+    <section class="section section--muted">
+      <div class="container">
+        <p class="eyebrow">Grondlegger</p>
+        <h2>{grondlegger.data.naam}</h2>
+        <p class="periode">{grondlegger.data.periode}</p>
+        <div class="prose">
+          <GrondleggerContent />
+        </div>
+      </div>
+    </section>
+  )}
+
+  {huidigeGeneratie && (
+    <section class="section">
+      <div class="container">
+        <p class="eyebrow">Huidige generatie</p>
+        <h2>{huidigeGeneratie.data.naam}{huidigeGeneratie.data.slagnaam && <span class="slagnaam"> &mdash; {huidigeGeneratie.data.slagnaam}</span>}</h2>
+        <p class="periode">{huidigeGeneratie.data.periode}</p>
+        <div class="prose">
+          <HuidigeContent />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--muted">
+    <div class="container">
+      <p class="eyebrow">Erelijst</p>
+      <h2>Prestaties door de generaties heen</h2>
+      <ol class="timeline">
+        {prestaties.map((p) => (
+          <li class="card">
+            <span class="timeline-niveau">{p.data.niveau}</span>
+            <h3>{p.data.titel}</h3>
+            <p class="timeline-periode">{p.data.periode ?? p.data.jaar}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container cta">
+      <h2>De geschiedenis gaat verder</h2>
+      <p>Nieuwe kampioenen worden nu voorbereid voor de volgende generatie.</p>
+      <a class="button" href={withBase('/generaties-van-morgen/')}>Bekijk de generaties van morgen &rarr;</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--size-step-1);
+    color: var(--color-ink-soft);
+    max-width: 65ch;
+  }
+
+  .periode {
+    color: var(--color-brass);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+  }
+
+  .slagnaam {
+    color: var(--color-brass);
+  }
+
+  .prose {
+    max-width: 70ch;
+  }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline {
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-2);
+  }
+
+  .timeline-niveau {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--color-brass);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-periode {
+    color: var(--color-ink-soft);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .cta {
+    text-align: center;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+  }
+</style>
