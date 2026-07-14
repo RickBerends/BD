@@ -40,8 +40,12 @@
   color-scheme: light;
 }
 
+/* Donker thema: volgt het systeem, tenzij de bezoeker via de themaknop
+   expliciet kiest (data-theme op <html>, gezet vóór first paint). De twee
+   blokken zijn bewust identiek — CSS kan een media query en een attribuut-
+   selector niet in één regel combineren. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='licht']) {
     --color-bg: #201812;
     --color-bg-raised: #2a2018;
     --color-ink: #efe6d8;
@@ -55,8 +59,35 @@
   }
 }
 
+:root[data-theme='donker'] {
+  --color-bg: #201812;
+  --color-bg-raised: #2a2018;
+  --color-ink: #efe6d8;
+  --color-ink-soft: #cbbca7;
+  --color-wood: #efe6d8;
+  --color-wood-dark: #f6f0e4;
+  --color-brass: #d9b565;
+  --color-brass-soft: #e8cd8c;
+  --color-border: #4a3b2c;
+  color-scheme: dark;
+}
+
+/* Tekstgrootte-standen (A / A+ / A++), alles is rem-gebaseerd dus dit schaalt de hele site */
+:root[data-fontsize='groot'] {
+  font-size: 112.5%;
+}
+
+:root[data-fontsize='extra'] {
+  font-size: 125%;
+}
+
 * {
   box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brass);
+  outline-offset: 2px;
 }
 
 html {
@@ -173,6 +204,58 @@ img { max-width: 100%; height: auto; display: block; }
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  .breadcrumbs,
+  .skip-link,
+  .paper-divider,
+  .display-controls,
+  .related-entries,
+  .hero-actions,
+  .button {
+    display: none !important;
+  }
+
+  :root {
+    font-size: 12pt;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .section {
+    padding: 0 0 1.5rem;
+  }
+
+  /* Scroll-reveal mag een afdruk nooit verbergen */
+  :root.js-reveal .section:not(.hero) {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  a {
+    color: #000;
+  }
+
+  /* Volledige URL achter externe links, zodat een afdruk bruikbaar blijft */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  p, li, blockquote {
+    orphans: 3;
+    widows: 3;
+  }
 }
 
 .fade-in {

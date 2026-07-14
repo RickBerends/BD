@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Timeline from '../../components/Timeline.astro';
 import { withBase } from '../../utils/url';
 
 const fanciers = await getCollection('fanciers');
@@ -59,15 +60,7 @@ const { Content: HuidigeContent } = huidigeGeneratie ? await render(huidigeGener
     <div class="container">
       <p class="eyebrow">Erelijst</p>
       <h2>Prestaties door de generaties heen</h2>
-      <ol class="timeline">
-        {prestaties.map((p) => (
-          <li class="card">
-            <span class="timeline-niveau">{p.data.niveau}</span>
-            <h3>{p.data.titel}</h3>
-            <p class="timeline-periode">{p.data.periode ?? p.data.jaar}</p>
-          </li>
-        ))}
-      </ol>
+      <Timeline prestaties={prestaties} />
     </div>
   </section>
 
@@ -112,31 +105,6 @@ const { Content: HuidigeContent } = huidigeGeneratie ? await render(huidigeGener
     float: left;
     padding: 0.1rem 0.4rem 0 0;
     color: var(--color-brass);
-  }
-
-  .timeline {
-    list-style: none;
-    margin: var(--space-3) 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: var(--space-2);
-  }
-
-  .timeline-niveau {
-    display: inline-block;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.75rem;
-    color: var(--color-brass);
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .timeline-periode {
-    color: var(--color-ink-soft);
-    font-size: 0.9rem;
-    margin: 0;
   }
 
   .cta {

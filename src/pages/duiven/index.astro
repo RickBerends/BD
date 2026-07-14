@@ -1,10 +1,27 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InOpbouw from '../../components/InOpbouw.astro';
 import { withBase } from '../../utils/url';
 
-const duiven = await getCollection('duiven');
+const duiven = (await getCollection('duiven')).sort((a, b) =>
+  a.data.naam.localeCompare(b.data.naam, 'nl')
+);
+
+// Filterknoppen alleen tonen als er iets te filteren valt.
+const heeftKweek = duiven.some((d) => d.data.categorie === 'kweek');
+const heeftVlieg = duiven.some((d) => d.data.categorie === 'vlieg');
+const heeftTeKoop = duiven.some((d) => d.data.teKoop);
+
+const filters = [
+  { key: 'all', label: 'Alle duiven', show: true },
+  { key: 'doffer', label: 'Doffers', show: duiven.some((d) => d.data.geslacht === 'doffer') },
+  { key: 'duivin', label: 'Duivinnen', show: duiven.some((d) => d.data.geslacht === 'duivin') },
+  { key: 'kweek', label: 'Kweekduiven', show: heeftKweek },
+  { key: 'vlieg', label: 'Vliegduiven', show: heeftVlieg },
+  { key: 'te-koop', label: 'Te koop', show: heeftTeKoop },
+].filter((f) => f.show);
 ---
 
 <BaseLayout
@@ -26,18 +43,79 @@ const duiven = await getCollection('duiven');
           message="Samen met Henk Berends worden de eerste profielen ingevoerd: ringnummer, afkomst, verhaal en prestaties per duif. Kom binnenkort terug voor de eerste kamers van deze galerij."
         />
       ) : (
-        <div class="card-grid">
-          {duiven.map((duif) => (
-            <a class="card link-card" href={withBase(`/duiven/${duif.id}/`)}>
-              <h2>{duif.data.naam}</h2>
-              <p>{duif.data.ringnummer}</p>
-            </a>
-          ))}
-        </div>
+        <>
+          {filters.length > 1 && (
+            <div class="filters" role="group" aria-label="Filter duiven">
+              {filters.map((f, i) => (
+                <button
+                  class="filter"
+                  data-filter={f.key}
+                  aria-pressed={i === 0 ? 'true' : 'false'}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div class="gallery" id="gallery">
+            {duiven.map((duif) => (
+              <a
+                class="duif-card"
+                href={withBase(`/duiven/${duif.id}/`)}
+                data-geslacht={duif.data.geslacht}
+                data-categorie={duif.data.categorie ?? ''}
+                data-tekoop={duif.data.teKoop ? 'true' : 'false'}
+              >
+                <div class="duif-photo">
+                  {duif.data.foto ? (
+                    <Image src={duif.data.foto} alt={`Foto van ${duif.data.naam}`} width={360} />
+                  ) : (
+                    <div class="duif-photo--empty"><span>Foto volgt</span></div>
+                  )}
+                  {duif.data.teKoop && <span class="card-badge">Te koop</span>}
+                </div>
+                <div class="duif-info">
+                  <h2>{duif.data.naam}</h2>
+                  <p class="duif-ring">{duif.data.ringnummer}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+          <p class="geen-resultaten" hidden>Geen duiven in deze selectie.</p>
+        </>
       )}
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.duif-card'));
+  const empty = document.querySelector<HTMLElement>('.geen-resultaten');
+
+  function matches(card: HTMLElement, key: string): boolean {
+    if (key === 'all') return true;
+    if (key === 'doffer' || key === 'duivin') return card.dataset.geslacht === key;
+    if (key === 'kweek' || key === 'vlieg') return card.dataset.categorie === key;
+    if (key === 'te-koop') return card.dataset.tekoop === 'true';
+    return true;
+  }
+
+  for (const btn of buttons) {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.filter ?? 'all';
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let visible = 0;
+      for (const card of cards) {
+        const show = matches(card, key);
+        card.hidden = !show;
+        if (show) visible++;
+      }
+      if (empty) empty.hidden = visible > 0;
+    });
+  }
+</script>
 
 <style>
   .lead {
@@ -47,14 +125,105 @@ const duiven = await getCollection('duiven');
     margin-bottom: var(--space-3);
   }
 
-  .card-grid {
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .filter {
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+  }
+
+  .filter[aria-pressed='true'] {
+    background: var(--color-wood);
+    border-color: var(--color-wood);
+    color: var(--color-bg-raised);
+  }
+
+  .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: var(--space-3);
   }
 
-  .link-card {
+  .duif-card {
     text-decoration: none;
     color: inherit;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .duif-card:hover {
+    border-color: var(--color-brass);
+    transform: translateY(-2px);
+  }
+
+  .duif-photo {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--color-bg);
+  }
+
+  .duif-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .duif-photo--empty {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: var(--color-ink-soft);
+    font-style: italic;
+    font-size: 0.85rem;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    background: var(--color-brass);
+    color: var(--color-wood-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.55rem;
+    border-radius: var(--radius);
+  }
+
+  .duif-info {
+    padding: var(--space-2);
+  }
+
+  .duif-info h2 {
+    font-size: var(--size-step-1);
+    margin: 0 0 0.2rem;
+  }
+
+  .duif-ring {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: 0.85rem;
+  }
+
+  .geen-resultaten {
+    color: var(--color-ink-soft);
+    font-style: italic;
   }
 </style>

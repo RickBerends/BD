@@ -1,0 +1,101 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { withBase } from '../utils/url';
+
+interface Props {
+  prestaties: CollectionEntry<'prestaties'>[];
+}
+const { prestaties } = Astro.props;
+
+// Duif-namen ophalen voor prestaties die aan een duif gekoppeld zijn (B6).
+const duiven = await getCollection('duiven');
+const duifNaam = (id?: string) => (id ? duiven.find((d) => d.id === id)?.data.naam : undefined);
+---
+
+<ol class="timeline">
+  {prestaties.map((p) => {
+    const naam = duifNaam(p.data.duif);
+    return (
+      <li class="timeline-item">
+        <div class="timeline-marker" aria-hidden="true"></div>
+        <div class="timeline-content">
+          <span class="timeline-niveau">{p.data.niveau}</span>
+          <h3>{p.data.titel}</h3>
+          <p class="timeline-periode">{p.data.periode ?? p.data.jaar}</p>
+          {naam && p.data.duif && (
+            <p class="timeline-duif">
+              gevlogen door <a href={withBase(`/duiven/${p.data.duif}/`)}>{naam}</a>
+            </p>
+          )}
+        </div>
+      </li>
+    );
+  })}
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    position: relative;
+  }
+
+  /* Messing ruggengraat */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: var(--color-brass);
+    opacity: 0.55;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 0 0 var(--space-3) var(--space-3);
+  }
+
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    border: 3px solid var(--color-brass);
+  }
+
+  .timeline-niveau {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    color: var(--color-brass);
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-item h3 {
+    font-size: var(--size-step-1);
+    margin: 0 0 0.15rem;
+  }
+
+  .timeline-periode {
+    color: var(--color-ink-soft);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .timeline-duif {
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+  }
+</style>

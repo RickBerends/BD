@@ -36,7 +36,22 @@ if (segments.length > 0 && segments[0] !== '404') {
     crumbs.push({ label: title });
   }
 }
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((crumb, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: crumb.label,
+    ...(crumb.href ? { item: new URL(withBase(crumb.href), Astro.site).href } : {}),
+  })),
+};
 ---
+
+{crumbs.length > 1 && (
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+)}
 
 {crumbs.length > 1 && (
   <nav class="breadcrumbs" aria-label="Kruimelpad">

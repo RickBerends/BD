@@ -1,0 +1,92 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/url';
+import { duivenInBloedlijn } from '../../utils/duiven';
+
+export async function getStaticPaths() {
+  const bloedlijnen = await getCollection('bloedlijnen');
+  return bloedlijnen.map((lijn) => ({
+    params: { slug: lijn.id },
+    props: { lijn },
+  }));
+}
+
+const { lijn } = Astro.props;
+const { Content } = await render(lijn);
+const leden = await duivenInBloedlijn(lijn);
+---
+
+<BaseLayout title={lijn.data.naam} description={`Bloedlijn ${lijn.data.naam} — ${lijn.data.oorsprong}`}>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Bloedlijn</p>
+      <h1>{lijn.data.naam}</h1>
+      <p class="oorsprong">{lijn.data.oorsprong}</p>
+
+      <div class="prose"><Content /></div>
+
+      <section class="leden" aria-label="Duiven in deze bloedlijn">
+        <p class="eyebrow">Duiven in deze lijn</p>
+        {leden.length > 0 ? (
+          <div class="chip-row">
+            {leden.map((d) => (
+              <a class="chip" href={withBase(`/duiven/${d.id}/`)}>{d.data.naam}</a>
+            ))}
+          </div>
+        ) : (
+          <p class="leeg">Nog geen duiven aan deze bloedlijn gekoppeld.</p>
+        )}
+      </section>
+
+      <p class="terug"><a href={withBase('/bloedlijnen/')}>&larr; Terug naar alle bloedlijnen</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .oorsprong {
+    color: var(--color-brass);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+  }
+
+  .prose {
+    max-width: 70ch;
+  }
+
+  .leden {
+    margin-top: var(--space-4);
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: var(--space-1);
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: var(--color-wood);
+  }
+
+  .chip:hover {
+    border-color: var(--color-brass);
+    color: var(--color-brass);
+  }
+
+  .leeg {
+    color: var(--color-ink-soft);
+    font-style: italic;
+  }
+
+  .terug {
+    margin-top: var(--space-4);
+  }
+</style>

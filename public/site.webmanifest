@@ -1,0 +1,9 @@
+{
+  "name": "Berends Duiven",
+  "short_name": "BD",
+  "icons": [{ "src": "/BD/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }],
+  "theme_color": "#3b271c",
+  "background_color": "#f6f0e4",
+  "display": "browser",
+  "start_url": "/BD/"
+}

@@ -1,0 +1,73 @@
+---
+import PedigreeCell from './PedigreeCell.astro';
+import type { PedigreeNode } from '../utils/duiven';
+
+interface Props {
+  node: PedigreeNode;
+}
+const { node } = Astro.props;
+
+const grootouders = [
+  node.vader?.vader,
+  node.vader?.moeder,
+  node.moeder?.vader,
+  node.moeder?.moeder,
+];
+
+const heeftVoorouders = Boolean(node.vader || node.moeder);
+---
+
+{heeftVoorouders && (
+  <section class="pedigree" aria-label="Stamboom">
+    <p class="eyebrow">Stamboom</p>
+    <div class="grid">
+      <div class="col col-self">
+        <PedigreeCell node={node} rol="Deze duif" />
+      </div>
+      <div class="col col-ouders">
+        <PedigreeCell node={node.vader} rol="Vader" />
+        <PedigreeCell node={node.moeder} rol="Moeder" />
+      </div>
+      <div class="col col-grootouders">
+        {grootouders.map((g) => <PedigreeCell node={g} rol="Grootouder" small />)}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .pedigree {
+    margin-top: var(--space-4);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-2);
+    align-items: stretch;
+  }
+
+  .col {
+    display: grid;
+    gap: var(--space-2);
+    align-content: center;
+  }
+
+  .col-ouders {
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .col-grootouders {
+    grid-template-rows: repeat(4, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .col-ouders,
+    .col-grootouders {
+      grid-template-rows: none;
+    }
+  }
+</style>

@@ -1,6 +1,10 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Pedigree from '../../components/Pedigree.astro';
+import { withBase } from '../../utils/url';
+import { nakomelingen, prestatiesVanDuif, pedigree } from '../../utils/duiven';
 
 export async function getStaticPaths() {
   const duiven = await getCollection('duiven');
@@ -12,52 +16,227 @@ export async function getStaticPaths() {
 
 const { duif } = Astro.props;
 const { Content } = await render(duif);
-const vader = duif.data.vader ? await getEntry('duiven', duif.data.vader) : undefined;
-const moeder = duif.data.moeder ? await getEntry('duiven', duif.data.moeder) : undefined;
+
+const kinderen = await nakomelingen(duif.id);
+const prestaties = await prestatiesVanDuif(duif.id);
+const stamboom = await pedigree(duif, 3);
+
+const geslachtLabel = duif.data.geslacht === 'doffer' ? 'Doffer' : 'Duivin';
 ---
 
-<BaseLayout title={duif.data.naam} description={`Ringnummer ${duif.data.ringnummer} — ${duif.data.naam}`}>
+<BaseLayout title={duif.data.naam} description={`${duif.data.naam} — ringnummer ${duif.data.ringnummer}, ${geslachtLabel} uit de stam Berends.`}>
   <section class="section">
-    <div class="container prose">
+    <div class="container">
+      {duif.data.teKoop && <p class="te-koop-badge">Te koop</p>}
       <p class="eyebrow">{duif.data.ringnummer}</p>
       <h1>{duif.data.naam}</h1>
-      <dl class="specs">
-        <div><dt>Geslacht</dt><dd>{duif.data.geslacht}</dd></div>
-        {duif.data.kleur && <div><dt>Kleur</dt><dd>{duif.data.kleur}</dd></div>}
-        {duif.data.geboortejaar && <div><dt>Geboortejaar</dt><dd>{duif.data.geboortejaar}</dd></div>}
-        {vader && <div><dt>Vader</dt><dd>{vader.data.naam}</dd></div>}
-        {moeder && <div><dt>Moeder</dt><dd>{moeder.data.naam}</dd></div>}
-      </dl>
-      <Content />
+
+      <div class="profile">
+        <div class="profile-media">
+          {duif.data.foto ? (
+            <figure class="portrait-frame">
+              <Image src={duif.data.foto} alt={`Foto van ${duif.data.naam}`} width={480} />
+              <figcaption>{duif.data.naam} &mdash; {duif.data.ringnummer}</figcaption>
+            </figure>
+          ) : (
+            <div class="portrait-frame portrait-frame--empty">
+              <span>Foto volgt</span>
+            </div>
+          )}
+
+          <dl class="plaque">
+            <div><dt>Geslacht</dt><dd>{geslachtLabel}</dd></div>
+            {duif.data.kleur && <div><dt>Kleur</dt><dd>{duif.data.kleur}</dd></div>}
+            {duif.data.geboortejaar && <div><dt>Geboortejaar</dt><dd>{duif.data.geboortejaar}</dd></div>}
+            {duif.data.categorie && <div><dt>Categorie</dt><dd>{duif.data.categorie}</dd></div>}
+          </dl>
+        </div>
+
+        <div class="profile-body">
+          <div class="prose"><Content /></div>
+
+          {prestaties.length > 0 && (
+            <section class="profile-prestaties" aria-label="Prestaties">
+              <p class="eyebrow">Prestaties</p>
+              <ul>
+                {prestaties.map((p) => (
+                  <li>
+                    <span class="niveau">{p.data.niveau}</span>
+                    <span>{p.data.titel}{p.data.jaar ? ` (${p.data.jaar})` : ''}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+      </div>
+
+      <Pedigree node={stamboom} />
+
+      {kinderen.length > 0 && (
+        <section class="nakomelingen" aria-label="Nakomelingen">
+          <p class="eyebrow">Nakomelingen</p>
+          <div class="chip-row">
+            {kinderen.map((k) => (
+              <a class="chip" href={withBase(`/duiven/${k.id}/`)}>
+                {k.data.naam}
+                {k.data.geboortejaar && <span class="chip-jaar"> · {k.data.geboortejaar}</span>}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <p class="terug"><a href={withBase('/duiven/')}>&larr; Terug naar de galerij</a></p>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .prose {
-    max-width: 70ch;
+  .te-koop-badge {
+    display: inline-block;
+    background: var(--color-brass);
+    color: var(--color-wood-dark);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius);
+    margin-bottom: var(--space-1);
   }
 
-  .specs {
+  .profile {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: var(--space-2);
-    margin: var(--space-3) 0;
+    grid-template-columns: minmax(0, 340px) 1fr;
+    gap: var(--space-4);
+    align-items: start;
+    margin-top: var(--space-2);
+  }
+
+  @media (max-width: 760px) {
+    .profile {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .portrait-frame {
+    margin: 0;
+    padding: 0.6rem;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 6px 20px rgba(36, 22, 16, 0.12);
+  }
+
+  .portrait-frame img {
+    border: 1px solid var(--color-brass);
+    display: block;
+    width: 100%;
+  }
+
+  .portrait-frame figcaption {
+    padding-top: 0.6rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--color-ink-soft);
+  }
+
+  .portrait-frame--empty {
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
+    color: var(--color-ink-soft);
+    font-style: italic;
+    border-style: dashed;
+  }
+
+  .plaque {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-1) var(--space-2);
+    margin: var(--space-2) 0 0;
     padding: var(--space-2);
     background: var(--color-bg-raised);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
   }
 
-  .specs dt {
-    font-size: 0.75rem;
+  .plaque dt {
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--color-brass);
   }
 
-  .specs dd {
-    margin: 0;
+  .plaque dd {
+    margin: 0 0 0.4rem;
     font-weight: 600;
+  }
+
+  .prose {
+    max-width: 65ch;
+  }
+
+  .profile-prestaties {
+    margin-top: var(--space-3);
+  }
+
+  .profile-prestaties ul {
+    list-style: none;
+    margin: var(--space-1) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .profile-prestaties li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .profile-prestaties .niveau {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-brass);
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 6rem;
+  }
+
+  .nakomelingen {
+    margin-top: var(--space-4);
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: var(--space-1);
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: var(--color-wood);
+  }
+
+  .chip:hover {
+    border-color: var(--color-brass);
+    color: var(--color-brass);
+  }
+
+  .chip-jaar {
+    color: var(--color-ink-soft);
+  }
+
+  .terug {
+    margin-top: var(--space-4);
   }
 </style>

@@ -35,6 +35,17 @@ function isActive(href: string) {
       <span class="nav-toggle-bar"></span>
       <span class="nav-toggle-bar"></span>
     </button>
+    <div class="display-controls" role="group" aria-label="Weergave-instellingen">
+      <button id="fontsize-toggle" title="Tekstgrootte aanpassen" aria-label="Tekstgrootte aanpassen">
+        <span aria-hidden="true">A</span><span class="fontsize-plus" aria-hidden="true">+</span>
+      </button>
+      <button id="theme-toggle" title="Licht of donker" aria-label="Wissel tussen licht en donker">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+          <path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" />
+        </svg>
+      </button>
+    </div>
     <nav id="primary-nav" class="primary-nav" aria-label="Hoofdmenu">
       <ul>
         {nav.map((item) => (
@@ -144,6 +155,39 @@ function isActive(href: string) {
     background: var(--color-brass-soft);
   }
 
+  .display-controls {
+    display: flex;
+    gap: 0.4rem;
+    order: 2;
+  }
+
+  .display-controls button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    background: transparent;
+    border: 1px solid rgba(203, 168, 92, 0.55);
+    border-radius: var(--radius);
+    color: var(--color-chrome-text);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .display-controls button:hover {
+    border-color: var(--color-brass-soft);
+    color: var(--color-brass-soft);
+  }
+
+  .fontsize-plus {
+    font-size: 0.7em;
+    vertical-align: super;
+  }
+
   .in-progress-dot {
     display: inline-block;
     width: 5px;
@@ -156,8 +200,17 @@ function isActive(href: string) {
   }
 
   @media (max-width: 860px) {
+    .header-bar {
+      flex-wrap: wrap;
+    }
+
+    .display-controls {
+      margin-left: auto;
+    }
+
     .nav-toggle {
       display: flex;
+      order: 2;
     }
 
     .primary-nav {
@@ -189,5 +242,35 @@ function isActive(href: string) {
     const expanded = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!expanded));
     nav?.classList.toggle('is-open');
+  });
+
+  const root = document.documentElement;
+
+  // Tekstgrootte: normaal -> groot -> extra -> normaal
+  const sizes = ['normaal', 'groot', 'extra'];
+  document.getElementById('fontsize-toggle')?.addEventListener('click', () => {
+    const current = root.getAttribute('data-fontsize') ?? 'normaal';
+    const next = sizes[(sizes.indexOf(current) + 1) % sizes.length];
+    if (next === 'normaal') {
+      root.removeAttribute('data-fontsize');
+      localStorage.removeItem('bd-fontsize');
+    } else {
+      root.setAttribute('data-fontsize', next);
+      localStorage.setItem('bd-fontsize', next);
+    }
+  });
+
+  // Thema: automatisch (systeem) -> donker -> licht -> automatisch
+  const themes = ['auto', 'donker', 'licht'];
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') ?? 'auto';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    if (next === 'auto') {
+      root.removeAttribute('data-theme');
+      localStorage.removeItem('bd-theme');
+    } else {
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('bd-theme', next);
+    }
   });
 </script>

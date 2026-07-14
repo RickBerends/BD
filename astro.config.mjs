@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 const BASE = '/BD';
 
@@ -42,4 +43,10 @@ export default defineConfig({
   base: BASE,
   trailingSlash: 'always',
   redirects,
+  integrations: [
+    sitemap({
+      // Redirect-stubs van oude .html-URL's horen niet in de sitemap.
+      filter: (page) => !page.includes('.html'),
+    }),
+  ],
 });

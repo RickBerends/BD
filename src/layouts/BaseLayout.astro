@@ -2,15 +2,31 @@
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { withBase } from '../utils/url';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogType = 'website', jsonLd } = Astro.props;
 const pageTitle = title === 'Berends Duiven' ? title : `${title} — Berends Duiven`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(withBase('/og-default.png'), Astro.site);
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Berends Duiven',
+  url: new URL(withBase('/'), Astro.site).href,
+  description: 'Digitaal erfgoedplatform van de marathon-duivenfamilie Berends.',
+  inLanguage: 'nl',
+};
+
+const jsonLdBlocks = [websiteLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
 ---
 
 <!doctype html>
@@ -20,11 +36,33 @@ const pageTitle = title === 'Berends Duiven' ? title : `${title} — Berends Dui
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2214%22 fill=%22%233b271c%22/><text x=%2250%22 y=%2266%22 font-size=%2248%22 font-family=%22Georgia,serif%22 fill=%22%23cba85c%22 text-anchor=%22middle%22>BD</text></svg>" />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    <link rel="alternate" type="application/rss+xml" title="Berends Duiven — Verhalen" href={withBase('/rss.xml')} />
+    <meta name="theme-color" content="#3b271c" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:site_name" content="Berends Duiven" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="generator" content={Astro.generator} />
+    {jsonLdBlocks.map((block) => (
+      <script type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+    <script is:inline>
+      // Vóór first paint: opgeslagen thema/tekstgrootte toepassen (geen flits).
+      try {
+        var t = localStorage.getItem('bd-theme');
+        if (t === 'licht' || t === 'donker') document.documentElement.setAttribute('data-theme', t);
+        var f = localStorage.getItem('bd-fontsize');
+        if (f === 'groot' || f === 'extra') document.documentElement.setAttribute('data-fontsize', f);
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Ga naar de inhoud</a>

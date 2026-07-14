@@ -15,9 +15,19 @@ export async function getStaticPaths() {
 const { verhaal } = Astro.props;
 const { Content } = await render(verhaal);
 const formatter = new Intl.DateTimeFormat('nl-NL', { year: 'numeric', month: 'long' });
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: verhaal.data.title,
+  description: verhaal.data.excerpt,
+  author: { '@type': 'Person', name: verhaal.data.author },
+  datePublished: verhaal.data.date.toISOString().slice(0, 10),
+  inLanguage: 'nl',
+};
 ---
 
-<BaseLayout title={verhaal.data.title} description={verhaal.data.excerpt}>
+<BaseLayout title={verhaal.data.title} description={verhaal.data.excerpt} ogType="article" jsonLd={articleLd}>
   <section class="section">
     <div class="container prose">
       <p class="eyebrow">{verhaal.data.category} &middot; {formatter.format(verhaal.data.date)}</p>

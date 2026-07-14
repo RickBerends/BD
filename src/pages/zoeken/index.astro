@@ -11,26 +11,31 @@ const bundlePath = withBase('/pagefind/');
       <p class="eyebrow">Archief</p>
       <h1>Zoeken</h1>
       <p class="lead">Doorzoek het familieverhaal, de kennisbank en de verhalen.</p>
-      <div id="search" class="search-root"></div>
+      <div class="search-root">
+        <pagefind-searchbox
+          placeholder="Zoek in het archief…"
+          show-sub-results
+          autofocus
+        >
+          <pagefind-config bundle-path={bundlePath}></pagefind-config>
+        </pagefind-searchbox>
+        <noscript>
+          <p>Zoeken vereist JavaScript. Gebruik anders het menu om door het archief te bladeren.</p>
+        </noscript>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
-<link href={withBase('/pagefind/pagefind-ui.css')} rel="stylesheet" />
+<link href={`${bundlePath}pagefind-component-ui.css`} rel="stylesheet" />
 <script define:vars={{ bundlePath }}>
-  async function initSearch() {
-    try {
-      await import(/* @vite-ignore */ `${bundlePath}pagefind-ui.js`);
-      new window.PagefindUI({ element: '#search', bundlePath, showSubResults: true });
-    } catch (err) {
-      const el = document.getElementById('search');
-      if (el) {
-        el.innerHTML =
-          '<p>De zoekindex is nog niet beschikbaar op deze omgeving. Bouw en publiceer de site (npm run build) om te zoeken.</p>';
-      }
+  import(/* @vite-ignore */ `${bundlePath}pagefind-component-ui.js`).catch(() => {
+    const el = document.querySelector('.search-root');
+    if (el) {
+      el.innerHTML =
+        '<p>De zoekindex is nog niet beschikbaar op deze omgeving. Bouw en publiceer de site (npm run build) om te zoeken.</p>';
     }
-  }
-  initSearch();
+  });
 </script>
 
 <style>

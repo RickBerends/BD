@@ -41,6 +41,9 @@ const prestaties = defineCollection({
     titel: z.string(),
     niveau: z.string(),
     volgorde: z.number(),
+    // Optioneel: entry-id van de duif die deze prestatie vloog (bestandsnaam in
+    // src/content/duiven/). Koppelt de erelijst aan het duivenprofiel.
+    duif: z.string().optional(),
   }),
 });
 
@@ -56,17 +59,25 @@ const fanciers = defineCollection({
 
 const duiven = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/duiven' }),
-  schema: z.object({
-    ringnummer: z.string(),
-    naam: z.string(),
-    geslacht: z.enum(['doffer', 'duivin']),
-    kleur: z.string().optional(),
-    geboortejaar: z.number().optional(),
-    vader: z.string().optional(),
-    moeder: z.string().optional(),
-    bloedlijn: z.string().optional(),
-    teKoop: z.boolean().default(false),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      ringnummer: z.string(),
+      naam: z.string(),
+      geslacht: z.enum(['doffer', 'duivin']),
+      // Voor de galerij-filters: kweekduif, vliegduif of jonge duif.
+      categorie: z.enum(['kweek', 'vlieg', 'jong']).optional(),
+      kleur: z.string().optional(),
+      geboortejaar: z.number().optional(),
+      // Foto naast het md-bestand; wordt door Astro geoptimaliseerd. Optioneel
+      // zodat een profiel ook zonder foto (nog) kan bestaan.
+      foto: image().optional(),
+      // vader/moeder verwijzen naar entry-id's (bestandsnaam) van andere duiven.
+      vader: z.string().optional(),
+      moeder: z.string().optional(),
+      // bloedlijn verwijst naar een entry-id of naam in de bloedlijnen-collectie.
+      bloedlijn: z.string().optional(),
+      teKoop: z.boolean().default(false),
+    }),
 });
 
 const bloedlijnen = defineCollection({

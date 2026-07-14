@@ -2,8 +2,13 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InOpbouw from '../../components/InOpbouw.astro';
+import { withBase } from '../../utils/url';
+import { duivenInBloedlijn } from '../../utils/duiven';
 
 const bloedlijnen = await getCollection('bloedlijnen');
+const metAantal = await Promise.all(
+  bloedlijnen.map(async (lijn) => ({ lijn, aantal: (await duivenInBloedlijn(lijn)).length }))
+);
 ---
 
 <BaseLayout
@@ -27,11 +32,14 @@ const bloedlijnen = await getCollection('bloedlijnen');
         />
       ) : (
         <div class="card-grid">
-          {bloedlijnen.map((lijn) => (
-            <div class="card">
+          {metAantal.map(({ lijn, aantal }) => (
+            <a class="card link-card" href={withBase(`/bloedlijnen/${lijn.id}/`)}>
               <h2>{lijn.data.naam}</h2>
               <p>{lijn.data.oorsprong}</p>
-            </div>
+              {aantal > 0 && (
+                <p class="aantal">{aantal} {aantal === 1 ? 'duif' : 'duiven'} in deze lijn</p>
+              )}
+            </a>
           ))}
         </div>
       )}
@@ -51,5 +59,23 @@ const bloedlijnen = await getCollection('bloedlijnen');
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: var(--space-3);
+  }
+
+  .link-card {
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .link-card:hover {
+    border-color: var(--color-brass);
+    transform: translateY(-2px);
+  }
+
+  .aantal {
+    color: var(--color-brass);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: var(--space-1) 0 0;
   }
 </style>
