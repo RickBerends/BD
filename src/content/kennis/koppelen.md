@@ -10,7 +10,7 @@ Het spelsysteem is bewust eenvoudig gehouden: het nestspel. Na het seizoen blijv
 
 Direct na het vliegseizoen, meestal na een viertal Marathonvluchten wanneer de schoolvakanties beginnen, gaan de bakken op half en blijft het koppel bij elkaar. Bij warm weer worden af en toe eieren geruimd, en ook het ruien terwijl het hele koppel samenzit, is geen probleem. Een extra ronde jongen grootbrengen na het vliegseizoen, zoals veel liefhebbers doen, voegt in deze ervaring weinig toe. Gedurende het vliegseizoen brengen de duiven een of twee jongen groot.
 
-De vorm, motivatie en kwaliteit van de duif blijken belangrijker dan de precieze stand waarop wordt ingekorfd.
+> De vorm, motivatie en kwaliteit van de duif blijken belangrijker dan de precieze stand waarop wordt ingekorfd.
 
 ## Vrij koppelen
 

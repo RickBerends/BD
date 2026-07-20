@@ -2,6 +2,7 @@
 title: Voeding
 order: 3
 excerpt: Een uitgekiend voerschema, knoflook en gekiemde zaden, en een terughoudende blik op medicatie.
+gerelateerdeMedia: ["20240515", "20230312", "2023-overig"]
 ---
 
 ## Voerschema
@@ -10,37 +11,28 @@ Het voedingssysteem en de supplementen zijn destijds uitgebreid uitgezocht op ba
 
 Er wordt gewerkt met drie types voer, elk met een eigen moment in de opbouw naar de Marathonvluchten:
 
-<table>
-  <caption>Voerschema — drie types door het seizoen heen</caption>
-  <thead>
-    <tr>
-      <th scope="col">Type</th>
-      <th scope="col">Moment</th>
-      <th scope="col">Basis</th>
-      <th scope="col">Extra's</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Zuiveren</td>
-      <td>Rustperiode en opbouw naar het seizoen</td>
-      <td>Perilla zaad, mariadistel</td>
-      <td>—</td>
-    </tr>
-    <tr>
-      <td>Vliegvoer</td>
-      <td>Tijdens het wedvluchtseizoen, na de training</td>
-      <td>Standaardmengeling</td>
-      <td>Roosvicee ferro, eiwitpoeder</td>
-    </tr>
-    <tr>
-      <td>Opvoeren (vetrijk)</td>
-      <td>Kweek- en Marathonopbouw</td>
-      <td>Pinda's</td>
-      <td>Biergist</td>
-    </tr>
-  </tbody>
-</table>
+<div class="infographic">
+  <div class="voerschema-grid">
+    <div class="voerschema-kaart">
+      <span class="voerschema-badge">1</span>
+      <h3>Zuiveren</h3>
+      <p class="voerschema-moment">Rustperiode &amp; opbouw</p>
+      <p class="voerschema-basis">Perilla zaad, mariadistel</p>
+    </div>
+    <div class="voerschema-kaart">
+      <span class="voerschema-badge">2</span>
+      <h3>Vliegvoer</h3>
+      <p class="voerschema-moment">Wedvluchtseizoen, na de training</p>
+      <p class="voerschema-basis">Standaardmengeling &mdash; roosvicee ferro, eiwitpoeder</p>
+    </div>
+    <div class="voerschema-kaart">
+      <span class="voerschema-badge">3</span>
+      <h3>Opvoeren</h3>
+      <p class="voerschema-moment">Kweek- &amp; Marathonopbouw</p>
+      <p class="voerschema-basis">Pinda's, biergist &mdash; vetrijk</p>
+    </div>
+  </div>
+</div>
 
 Automatische voerbakken worden voor de vliegduiven drie keer per dag bijgevuld, ruim voldoende zodat er altijd wat blijft liggen. Bij dit systeem worden de fondduiven daar niet vet van — duiven die dat wel zouden worden, passen hier simpelweg niet in.
 

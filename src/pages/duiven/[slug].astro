@@ -35,7 +35,14 @@ const geslachtLabel = duif.data.geslacht === 'doffer' ? 'Doffer' : 'Duivin';
         <div class="profile-media">
           {duif.data.foto ? (
             <figure class="portrait-frame">
-              <Image src={duif.data.foto} alt={`Foto van ${duif.data.naam}`} width={480} />
+              <Image
+                src={duif.data.foto}
+                alt={`Foto van ${duif.data.naam}`}
+                width={480}
+                quality={78}
+                loading="eager"
+                fetchpriority="high"
+              />
               <figcaption>{duif.data.naam} &mdash; {duif.data.ringnummer}</figcaption>
             </figure>
           ) : (

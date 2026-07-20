@@ -1,0 +1,56 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+interface Props {
+  ids?: string[];
+}
+
+const { ids = [] } = Astro.props;
+
+const items = (
+  await Promise.all(ids.map((id) => getEntry('media', id)))
+).filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+---
+
+{items.length > 0 && (
+  <div class="kennis-fotos" role="group" aria-label="Foto's uit de praktijk">
+    {items.map((item) => (
+      <figure class="kennis-foto">
+        <Image src={item.data.foto} alt={item.data.caption} width={360} quality={68} />
+        <figcaption>{item.data.caption}</figcaption>
+      </figure>
+    ))}
+  </div>
+)}
+
+<style>
+  .kennis-fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-2);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+
+  .kennis-foto {
+    margin: 0;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .kennis-foto img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .kennis-foto figcaption {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--color-ink-soft);
+    font-style: italic;
+  }
+</style>

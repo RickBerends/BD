@@ -2,6 +2,7 @@
 title: Motivatie
 order: 4
 excerpt: Kleine trucjes om een doffer scherp te houden, en het ritme van verduisteren en bijlichten.
+gerelateerdeMedia: ["20250104"]
 ---
 
 ## Motivatietrucjes

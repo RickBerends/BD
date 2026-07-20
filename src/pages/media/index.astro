@@ -38,7 +38,7 @@ const withLinks = await Promise.all(
         <div class="media-grid">
           {withLinks.map(({ item, duif }, i) => (
             <button class="media-thumb" type="button" data-open={`lightbox-${i}`} aria-haspopup="dialog">
-              <Image src={item.data.foto} alt={item.data.caption} width={360} />
+              <Image src={item.data.foto} alt={item.data.caption} width={320} quality={62} />
               <span class="media-thumb-caption">{formatter.format(item.data.datum)}</span>
             </button>
           ))}
@@ -67,7 +67,7 @@ const withLinks = await Promise.all(
           </button>
         )}
         <figure>
-          <Image src={item.data.foto} alt={item.data.caption} width={900} loading="lazy" />
+          <Image src={item.data.foto} alt={item.data.caption} width={760} quality={72} loading="lazy" />
           <figcaption>
             <p class="lightbox-datum">{formatter.format(item.data.datum)}</p>
             <p>{item.data.caption}</p>

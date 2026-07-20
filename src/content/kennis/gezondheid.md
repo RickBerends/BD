@@ -2,6 +2,7 @@
 title: Gezondheid
 order: 6
 excerpt: Allicine in plaats van antibiotica, geen kuren midden in het seizoen, en een protocol voor als het toch misgaat.
+gerelateerdeMedia: ["20250612"]
 ---
 
 ## Allicine in plaats van antibiotica

@@ -1,9 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { withBase } from '../../utils/url';
 
 const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.data.order);
+
+const withThumbs = await Promise.all(
+  items.map(async (item) => {
+    const firstMediaId = item.data.gerelateerdeMedia?.[0];
+    const thumb = firstMediaId ? await getEntry('media', firstMediaId).catch(() => undefined) : undefined;
+    return { item, thumb };
+  })
+);
 ---
 
 <BaseLayout
@@ -24,10 +33,22 @@ const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.da
 
   <section class="section section--muted">
     <div class="container card-grid">
-      {items.map((item) => (
+      {withThumbs.map(({ item, thumb }, i) => (
         <a class="card link-card" href={withBase(`/kennis/${item.id}/`)}>
-          <h2>{item.data.title}</h2>
-          <p>{item.data.excerpt}</p>
+          <div class="link-card-media">
+            {thumb ? (
+              <Image src={thumb.data.foto} alt="" width={340} quality={62} />
+            ) : (
+              <div class="link-card-media--leeg" aria-hidden="true">
+                <span class="ornament-mark">&#10022;</span>
+              </div>
+            )}
+            <span class="link-card-nummer">{i + 1}</span>
+          </div>
+          <div class="link-card-tekst">
+            <h2>{item.data.title}</h2>
+            <p>{item.data.excerpt}</p>
+          </div>
         </a>
       ))}
     </div>
@@ -48,6 +69,10 @@ const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.da
   }
 
   .link-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
     text-decoration: none;
     color: inherit;
     transition: border-color 200ms ease, transform 200ms ease;
@@ -58,8 +83,56 @@ const items = (await getCollection('kennis')).sort((a, b) => a.data.order - b.da
     transform: translateY(-2px);
   }
 
+  .link-card-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg);
+  }
+
+  .link-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .link-card-media--leeg {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(155deg, var(--color-bg-raised), var(--color-bg));
+  }
+
+  .link-card-media--leeg .ornament-mark {
+    color: var(--color-brass);
+    font-size: 1.6rem;
+    opacity: 0.6;
+  }
+
+  .link-card-nummer {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: var(--color-wood);
+    color: var(--color-bg-raised);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .link-card-tekst {
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+
   .link-card h2 {
     font-size: var(--size-step-1);
+    margin-bottom: 0.4rem;
   }
 
   .link-card p {

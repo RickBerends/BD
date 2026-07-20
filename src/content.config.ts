@@ -30,6 +30,10 @@ const kennis = defineCollection({
     excerpt: z.string(),
     gerelateerdeDuiven: z.array(z.string()).optional(),
     gerelateerdeBloedlijn: z.string().optional(),
+    // Entry-id's (bestandsnaam zonder .md) uit de media-collectie — echte
+    // foto's uit de praktijk die dit artikel illustreren. Eerste item dient
+    // ook als thumbnail op de kennisbank-indexpagina.
+    gerelateerdeMedia: z.array(z.string()).optional(),
   }),
 });
 

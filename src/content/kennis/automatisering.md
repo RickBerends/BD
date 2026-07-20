@@ -2,6 +2,7 @@
 title: Automatisering
 order: 5
 excerpt: Van een verlichte spoetnik tot een muisvrije voerbak — kleine technische ingrepen die het hok slimmer maken, geen dure systemen.
+gerelateerdeMedia: ["20230916", "20240121", "20240311", "20250104"]
 ---
 
 ## Spoetnik met verlichte klep

@@ -69,7 +69,7 @@ const filters = [
               >
                 <div class="duif-photo">
                   {duif.data.foto ? (
-                    <Image src={duif.data.foto} alt={`Foto van ${duif.data.naam}`} width={360} />
+                    <Image src={duif.data.foto} alt={`Foto van ${duif.data.naam}`} width={340} quality={65} />
                   ) : (
                     <div class="duif-photo--empty"><span>Foto volgt</span></div>
                   )}
