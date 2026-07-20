@@ -4,8 +4,6 @@ import path from 'node:path';
 
 const jobs = [
   { src: 'legacy-site/HB1.png', out: 'src/assets/henk-berends.webp', width: 700 },
-  { src: 'legacy-site/image1.png', out: 'src/assets/media-1.webp', width: 900 },
-  { src: 'legacy-site/image2.png', out: 'src/assets/media-2.webp', width: 900 },
   { src: 'legacy-site/duiven.png', out: 'src/assets/duiven-pattern.webp', width: 400 },
 ];
 

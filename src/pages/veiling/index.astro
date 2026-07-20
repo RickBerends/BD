@@ -19,9 +19,16 @@ import { withBase } from '../../utils/url';
         welke toekomst deze duif kan betekenen voor uw hok.
       </p>
 
+      <p class="beschikbaar">
+        Uit de prijsvliegende duiven van het afgelopen seizoen &mdash; met resultaten als 7e nationaal
+        Sint-Vincent sector 1a, twee kopprijzen op Pau en een 44e nationaal Barcelona &mdash; zijn op
+        dit moment jonge duiven beschikbaar. Belangrijkste kweeklijn: Jellema x eigen soort. Interesse?
+        Stuur gerust een persoonlijk bericht.
+      </p>
+
       <InOpbouw
-        title="De eerste catalogus wordt samengesteld"
-        message="Zodra er duiven met voldoende afkomstgegevens beschikbaar zijn, opent de eerste veiling. Interesse in een toekomstige veiling of in een specifieke lijn? Neem gerust contact op."
+        title="De eerste digitale catalogus wordt samengesteld"
+        message="Een volledige veilingcatalogus met stamboom, prestaties en biedsysteem per duif is in de maak. Tot die tijd verloopt verkoop via persoonlijk contact — geen 'product X, prijs Y', maar een gesprek over welke lijn bij uw hok past."
       />
 
       <p><a class="button" href={withBase('/contact/')}>Neem contact op &rarr;</a></p>
@@ -35,5 +42,14 @@ import { withBase } from '../../utils/url';
     color: var(--color-ink-soft);
     max-width: 65ch;
     margin-bottom: var(--space-3);
+  }
+
+  .beschikbaar {
+    max-width: 65ch;
+    padding: var(--space-2);
+    margin-bottom: var(--space-3);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
   }
 </style>

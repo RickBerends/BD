@@ -15,7 +15,7 @@ const verhalen = defineCollection({
     title: z.string(),
     author: z.string(),
     date: z.coerce.date(),
-    category: z.enum(['geschiedenis', 'training', 'wedvlucht-verslag']),
+    category: z.enum(['geschiedenis', 'training', 'wedvlucht-verslag', 'jaaroverzicht']),
     excerpt: z.string(),
     gerelateerdeDuiven: z.array(z.string()).optional(),
     gerelateerdeBloedlijn: z.string().optional(),
@@ -88,4 +88,17 @@ const bloedlijnen = defineCollection({
   }),
 });
 
-export const collections = { verhalen, kennis, prestaties, fanciers, duiven, bloedlijnen };
+const media = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/media' }),
+  schema: ({ image }) =>
+    z.object({
+      caption: z.string(),
+      datum: z.coerce.date(),
+      gerelateerdeDuif: z.string().optional(),
+      gerelateerdeBloedlijn: z.string().optional(),
+      gerelateerdePrestatie: z.string().optional(),
+      foto: image(),
+    }),
+});
+
+export const collections = { verhalen, kennis, prestaties, fanciers, duiven, bloedlijnen, media };

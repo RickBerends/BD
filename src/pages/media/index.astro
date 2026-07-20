@@ -1,33 +1,137 @@
 ---
+import { getCollection, getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import media1 from '../../assets/media-1.webp';
-import media2 from '../../assets/media-2.webp';
+import InOpbouw from '../../components/InOpbouw.astro';
+import { withBase } from '../../utils/url';
 
-const items = [
-  { src: media1, alt: 'Vermelding van Henk Berends', caption: 'Onderschrift volgt zodra de context met Henk is besproken.' },
-  { src: media2, alt: 'Vermelding van Henk Berends', caption: 'Onderschrift volgt zodra de context met Henk is besproken.' },
-];
+const items = (await getCollection('media')).sort(
+  (a, b) => b.data.datum.valueOf() - a.data.datum.valueOf()
+);
+
+const formatter = new Intl.DateTimeFormat('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const withLinks = await Promise.all(
+  items.map(async (item) => ({
+    item,
+    duif: item.data.gerelateerdeDuif ? await getEntry('duiven', item.data.gerelateerdeDuif) : undefined,
+  }))
+);
 ---
 
-<BaseLayout title="Media" description="Een greep uit de vermeldingen en beelden van Henk Berends en de Berends duiven.">
+<BaseLayout title="Media" description="Een fotogalerij van Henk Berends en de Berends duiven: trainingen, wedvluchten en het leven op het hok, door de jaren heen.">
   <section class="section">
     <div class="container">
       <p class="eyebrow">In beeld</p>
       <h1>Media</h1>
-      <p class="lead">Een greep uit de recente vermeldingen van Henk Berends.</p>
+      <p class="lead">
+        Een selectie foto's uit de dagelijkse praktijk op het hok &mdash; van training en inkorven tot
+        wedvluchtresultaten en de kleine technische aanpassingen die het verschil maken.
+      </p>
 
-      <div class="media-grid">
-        {items.map((item) => (
-          <figure class="card">
-            <Image src={item.src} alt={item.alt} width={500} />
-            <figcaption>{item.caption}</figcaption>
-          </figure>
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <InOpbouw
+          title="De eerste foto's worden verzameld"
+          message="Zodra er beeldmateriaal met context beschikbaar is, verschijnt hier de eerste galerij."
+        />
+      ) : (
+        <div class="media-grid">
+          {withLinks.map(({ item, duif }, i) => (
+            <button class="media-thumb" type="button" data-open={`lightbox-${i}`} aria-haspopup="dialog">
+              <Image src={item.data.foto} alt={item.data.caption} width={360} />
+              <span class="media-thumb-caption">{formatter.format(item.data.datum)}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   </section>
+
+  {withLinks.map(({ item, duif }, i) => (
+    <dialog id={`lightbox-${i}`} class="lightbox" aria-label={item.data.caption}>
+      <div class="lightbox-inner">
+        <button class="lightbox-close" type="button" data-close autofocus>
+          <span aria-hidden="true">&times;</span>
+          <span class="visually-hidden">Sluiten</span>
+        </button>
+        {i > 0 && (
+          <button class="lightbox-nav lightbox-prev" type="button" data-nav={`lightbox-${i - 1}`}>
+            <span aria-hidden="true">&larr;</span>
+            <span class="visually-hidden">Vorige foto</span>
+          </button>
+        )}
+        {i < withLinks.length - 1 && (
+          <button class="lightbox-nav lightbox-next" type="button" data-nav={`lightbox-${i + 1}`}>
+            <span aria-hidden="true">&rarr;</span>
+            <span class="visually-hidden">Volgende foto</span>
+          </button>
+        )}
+        <figure>
+          <Image src={item.data.foto} alt={item.data.caption} width={900} loading="lazy" />
+          <figcaption>
+            <p class="lightbox-datum">{formatter.format(item.data.datum)}</p>
+            <p>{item.data.caption}</p>
+            {duif && (
+              <p class="lightbox-link"><a href={withBase(`/duiven/${duif.id}/`)}>Bekijk {duif.data.naam} &rarr;</a></p>
+            )}
+          </figcaption>
+        </figure>
+      </div>
+    </dialog>
+  ))}
 </BaseLayout>
+
+<script>
+  const dialogs = new Map(
+    Array.from(document.querySelectorAll<HTMLDialogElement>('dialog.lightbox')).map((d) => [d.id, d])
+  );
+
+  function openDialog(id: string) {
+    const dialog = dialogs.get(id);
+    if (!dialog) return;
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((btn) => {
+    btn.addEventListener('click', () => openDialog(btn.dataset.open!));
+  });
+
+  dialogs.forEach((dialog) => {
+    dialog.querySelectorAll<HTMLButtonElement>('[data-close]').forEach((btn) => {
+      btn.addEventListener('click', () => dialog.close());
+    });
+
+    dialog.querySelectorAll<HTMLButtonElement>('[data-nav]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.nav!;
+        dialog.close();
+        openDialog(targetId);
+      });
+    });
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') dialog.querySelector<HTMLButtonElement>('.lightbox-next')?.click();
+      if (e.key === 'ArrowLeft') dialog.querySelector<HTMLButtonElement>('.lightbox-prev')?.click();
+    });
+
+    // Klikken buiten de foto (op de backdrop) sluit de lightbox.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    // Swipe voor touch-apparaten.
+    let touchStartX = 0;
+    dialog.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    });
+    dialog.addEventListener('touchend', (e) => {
+      const delta = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) < 40) return;
+      const selector = delta > 0 ? '.lightbox-prev' : '.lightbox-next';
+      dialog.querySelector<HTMLButtonElement>(selector)?.click();
+    });
+  });
+</script>
 
 <style>
   .lead {
@@ -39,22 +143,129 @@ const items = [
 
   .media-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-2);
   }
 
-  .media-grid figure {
+  .media-thumb {
+    position: relative;
+    display: block;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg-raised);
+    overflow: hidden;
+    cursor: zoom-in;
+    font: inherit;
+    text-align: left;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .media-thumb:hover,
+  .media-thumb:focus-visible {
+    border-color: var(--color-brass);
+    transform: translateY(-2px);
+  }
+
+  .media-thumb img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .media-thumb-caption {
+    display: block;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.78rem;
+    color: var(--color-ink-soft);
+  }
+
+  dialog.lightbox {
+    max-width: min(92vw, 900px);
+    max-height: 92vh;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0;
+    background: var(--color-bg-raised);
+    color: var(--color-ink);
+  }
+
+  dialog.lightbox::backdrop {
+    background: rgba(20, 12, 8, 0.82);
+  }
+
+  .lightbox-inner {
+    position: relative;
+    padding: var(--space-2);
+  }
+
+  .lightbox-inner figure {
     margin: 0;
   }
 
-  .media-grid img {
-    border-radius: var(--radius);
+  .lightbox-inner img {
+    display: block;
+    width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border: 1px solid var(--color-brass);
   }
 
-  .media-grid figcaption {
-    padding-top: 0.6rem;
-    font-size: 0.85rem;
-    font-style: italic;
-    color: var(--color-ink-soft);
+  .lightbox-inner figcaption {
+    padding-top: 0.75rem;
+    max-width: 65ch;
+  }
+
+  .lightbox-datum {
+    margin: 0 0 0.25rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-brass);
+    font-weight: 700;
+  }
+
+  .lightbox-link {
+    margin-top: 0.5rem;
+  }
+
+  .lightbox-close,
+  .lightbox-nav {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-raised);
+    color: var(--color-ink);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-nav:hover {
+    border-color: var(--color-brass);
+    color: var(--color-brass);
+  }
+
+  .lightbox-close {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .lightbox-prev {
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lightbox-next {
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 </style>
