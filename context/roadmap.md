@@ -11,7 +11,7 @@ Astro site with warm heritage design system (Fraunces/Inter, wood/brass/parchmen
 
 ---
 
-## Phase A — Content acquisition (critical path; owner: Henk/Rick; already briefed)
+**## Phase A — Content acquisition (critical path; owner: Henk/Rick; already briefed)**
 
 The site's ceiling. All tooling exists; this is human work.
 
