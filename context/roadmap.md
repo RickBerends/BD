@@ -5,7 +5,7 @@
 This document supersedes and consolidates all prior plans: the original build plan (`context/plan.md`), the vision brief (`context/briefing.md`), and the earlier "like to love" plan. It is the single exhaustive list of everything still to implement, from tomorrow's quick wins to the full end-state vision — a digital heritage platform with the craftsmanship of a Rolex Museum, the presentation of Sotheby's, the knowledge structure of Wikipedia, and the personal feel of one's own digital loft.
 
 **What is already live** (Fase 0 + Fase 1 + like-to-love pass, deployed to GitHub Pages from `master`):
-Astro site with warm heritage design system (Fraunces/Inter, wood/brass/parchment, dark mode, reduced-motion support); all real 2015 content migrated and rewritten (familie, 4 kennis articles, 2 verhalen, 4 prestaties, 2 fanciers); images compressed 8.4MB→<150KB; legacy site archived under `legacy-site/` with 301 redirects and a real 404; Pagefind search; working contact form (mailto-based); breadcrumbs; editorial empty states with nav "in wording" signals; paper-texture dividers, museum-placard photo framing, scroll-reveal, pull-quotes, drop caps; `RelatedEntries` cross-link scaffold (verified working, renders nothing until content exists); content-sourcing brief + fill-in templates for Henk (`context/content-brief-henk.md`, `context/content-template-duif.md`, `context/content-template-bloedlijn.md`); GitHub Actions deploy pipeline.
+Astro site with warm heritage design system (Fraunces/Inter, wood/brass/parchment, dark mode, reduced-motion support); all real 2015 content migrated and rewritten (familie, 4 kennis articles, 2 verhalen, 4 prestaties, 2 fanciers); images compressed 8.4MB→<150KB; legacy site archived under `legacy-site/` with 301 redirects and a real 404; Pagefind search; working contact form (mailto-based); breadcrumbs; editorial empty states with nav "in wording" signals; paper-texture dividers, museum-placard photo framing, scroll-reveal, pull-quotes, drop caps; `RelatedEntries` cross-link scaffold (verified working, renders nothing until content exists); content-sourcing brief + fill-in templates for Henk (`context/content-brief-henk.md`, `context/content-template-duif.md`, `context/content-template-bloedlijn.md`); GitHub Actions deploy pipeline; **Decap CMS live at `/admin/`** — Henk and Rick edit all 7 content collections through a Dutch-language form UI (searchable relation pickers instead of typed filenames, drag-and-drop photo upload), publishing directly to `master`; GitHub login proxied through a Cloudflare Worker (`sveltia-cms-auth`); access controlled via repo collaborator permissions, not the OAuth app itself.
 
 **The ordering principle:** content is the critical path (Phase A) — everything else multiplies its value but cannot substitute for it. Phases B–G are sequenced by dependency and impact, but many items are independent and can be picked à la carte.
 
@@ -34,7 +34,7 @@ The site's ceiling. All tooling exists; this is human work.
 - **B4. Bloedlijn detail pages** (`/bloedlijnen/[slug]`): story of the line + auto-listed member duiven + founding pair pedigree.
 - **B5. Interactive stamboom v2** (once ≥15–20 linked birds): zoomable/pannable family tree of the whole stam — the brief's "interactieve stamboom." Evaluate d3-hierarchy vs. hand-rolled SVG; keep it an Astro island so the rest stays static.
 - **B6. Prestaties-tijdlijn upgrade**: true vertical timeline component (plan.md §4 named it; current version is a card grid) — brass spine, year markers, entries linking to the duif that flew them.
-- **B7. "Hoe voeg ik een duif toe"-instructie** for Henk — one page with screenshots of the GitHub web editor flow (until a CMS lands, Phase D1).
+- ~~**B7. "Hoe voeg ik een duif toe"-instructie** for Henk~~ — **Superseded by D1**: `context/hoe-voeg-ik-content-toe.md` now documents the Decap CMS flow as the primary path, with the old GitHub web-editor instructions kept as a documented fallback appendix.
 
 ## Phase C — Trust, reach & robustness (code-only; no content dependency; can start now)
 
@@ -53,10 +53,10 @@ The site's ceiling. All tooling exists; this is human work.
 
 ## Phase D — Content management & platform maturity
 
-- **D1. CMS decision & migration** — the recurring bottleneck killer. Original plan chose **Sanity** (schemas in `src/content.config.ts` were designed to map 1:1). Alternative now worth weighing: **Keystatic or Decap** (git-based, edits the existing markdown in-place, no data migration, free forever, works with GitHub Pages). Recommendation: git-based CMS first (days of work, zero migration), revisit Sanity only if image pipeline/preview needs outgrow it. Either way Henk gets a friendly editing UI instead of raw markdown.
-- **D2. Hosting decision**: stay on GitHub Pages (free, working) vs. move to Vercel (original plan; unlocks serverless functions for C3/E-phase, preview deploys per PR). Move when the first server-side need actually materializes — likely with the contact form (C3) or veiling (F).
-- **D3. Image pipeline for Henk**: drag-and-drop friendly — whatever CMS lands must auto-compress uploads (Astro image service already handles output; enforce input limits).
-- **D4. Editorial workflow**: PR-preview builds so Henk/Rick can review changes on a URL before publish (comes free with Vercel; achievable on Pages with a second workflow).
+- ~~**D1. CMS decision & migration**~~ — **Decided & shipped: Decap CMS** (git-based, edits the existing markdown in-place, no data migration, works with GitHub Pages, publishes direct to `master`). Sanity was the original plan but rejected in favor of zero-migration; Keystatic was considered but rejected because its GitHub-auth mode needs a live server route, which GitHub Pages can't host.
+- **D2. Hosting decision**: stay on GitHub Pages (free, working) vs. move to Vercel (original plan; unlocks serverless functions for C3/E-phase, preview deploys per PR). Move when the first server-side need actually materializes — likely with the contact form (C3) or veiling (F). Not needed for D1 — Decap's admin is fully static.
+- ~~**D3. Image pipeline for Henk**~~ — **Resolved by D1**: Decap's drag-and-drop image widget writes directly into `src/assets/duiven/`/`src/assets/media/`; Astro's existing build-time image optimization handles compression/output, same as hand-authored content.
+- ~~**D4. Editorial workflow**~~ — **Rejected, not merely pending.** A PR-preview review step was considered and explicitly declined in favor of direct-to-`master` publishing (matches how content already worked, keeps Henk's flow to a single "Publish" click). Do not re-introduce this without a fresh decision — it would contradict the D1 publish-mode choice.
 
 ## Phase E — De Veiling (the brief's Sotheby's pillar; needs A-content + D2)
 
@@ -95,7 +95,7 @@ The site's ceiling. All tooling exists; this is human work.
 
 | # | Decision | Options (lean) |
 |---|---|---|
-| 1 | CMS | **Keystatic/Decap (git-based, lean)** vs. Sanity (original plan) |
+| 1 | CMS | **Decided: Decap CMS** (git-based, direct-to-`master` publish) |
 | 2 | Hosting | Stay GitHub Pages vs. **Vercel when C3/E1 needs functions** |
 | 3 | Contact backend | **Formspree now (works on Pages)** vs. Resend (needs functions) |
 | 4 | Analytics | **GoatCounter (free)** vs. Plausible (€9/mo) |
@@ -109,7 +109,7 @@ The site's ceiling. All tooling exists; this is human work.
 2. **C6, C7** — accessibility toggle, print styles: highest-fit for the audience. (~1 session)
 3. **C9** — CI gates so Henk's future content edits can't break the site. (small)
 4. **B1–B4, B6, B7** — build the full duivenarchief experience against 1–2 sample entries, ready to light up when A-content lands. (~2 sessions)
-5. **D1** — git-based CMS so A-content can be entered by the family directly. (~1 session)
+5. ~~**D1**~~ — done: Decap CMS live, A-content can now be entered by the family directly through `/admin/`.
 6. **C3, C4** — real form + analytics (may trigger D2 hosting move).
 7. **A-content lands** → activate everything, then **E1** veiling v1.
 8. **B5, E2–E4, F, G, H** as content, needs, and appetite grow.

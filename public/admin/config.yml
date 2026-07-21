@@ -1,0 +1,253 @@
+backend:
+  name: github
+  repo: RickBerends/BD
+  branch: master
+  # Cloudflare Worker die de GitHub OAuth-uitwisseling doet (GitHub Pages kan
+  # dat zelf niet, want daar is geen server). Zie context/hoe-voeg-ik-content-toe.md
+  # voor de installatie-instructies (sveltia-cms-auth op Cloudflare Workers).
+  base_url: https://bd-cms-auth.REPLACE-ME.workers.dev
+  auth_endpoint: auth
+
+site_url: https://rickberends.github.io/BD/
+display_url: https://rickberends.github.io/BD/
+logo_url: /BD/favicon.svg
+locale: 'nl'
+
+media_folder: src/assets/uploads
+public_folder: /uploads
+
+publish_mode: simple
+
+collections:
+  - name: duiven
+    label: 'Duiven'
+    label_singular: 'Duif'
+    folder: src/content/duiven
+    create: true
+    slug: '{{ringnummer}}'
+    identifier_field: naam
+    media_folder: '../../assets/duiven'
+    public_folder: '../../assets/duiven'
+    fields:
+      - { label: 'Ringnummer', name: ringnummer, widget: string, hint: 'Zoals op de pootring, bijv. NL24-1234567' }
+      - { label: 'Naam', name: naam, widget: string, hint: 'Naam van de duif' }
+      - label: 'Geslacht'
+        name: geslacht
+        widget: select
+        options:
+          - { label: 'Doffer', value: doffer }
+          - { label: 'Duivin', value: duivin }
+      - label: 'Categorie'
+        name: categorie
+        widget: select
+        required: false
+        hint: 'Kweekduif, vliegduif of jonge duif — gebruikt voor de filters op /duiven'
+        options:
+          - { label: 'Kweekduif', value: kweek }
+          - { label: 'Vliegduif', value: vlieg }
+          - { label: 'Jonge duif', value: jong }
+      - { label: 'Kleur', name: kleur, widget: string, required: false }
+      - { label: 'Geboortejaar', name: geboortejaar, widget: number, value_type: int, required: false, min: 1980, max: 2100 }
+      - { label: 'Foto', name: foto, widget: image, required: false, hint: 'Sleep een foto (JPG/PNG) hierin — wordt automatisch verkleind door de site' }
+      - label: 'Vader'
+        name: vader
+        widget: relation
+        required: false
+        collection: duiven
+        search_fields: [naam, ringnummer]
+        display_fields: [naam, ringnummer]
+        value_field: '{{slug}}'
+        hint: 'Alleen invullen als de vader ook een eigen profiel op de site heeft'
+      - label: 'Moeder'
+        name: moeder
+        widget: relation
+        required: false
+        collection: duiven
+        search_fields: [naam, ringnummer]
+        display_fields: [naam, ringnummer]
+        value_field: '{{slug}}'
+        hint: 'Alleen invullen als de moeder ook een eigen profiel op de site heeft'
+      - label: 'Bloedlijn'
+        name: bloedlijn
+        widget: relation
+        required: false
+        collection: bloedlijnen
+        search_fields: [naam]
+        display_fields: [naam]
+        value_field: '{{slug}}'
+      - { label: 'Te koop', name: teKoop, widget: boolean, default: false }
+      - { label: 'Verhaal', name: body, widget: markdown, required: false, hint: 'Twee tot vier zinnen: afkomst, bijzonderheden, belangrijkste prestaties' }
+
+  - name: bloedlijnen
+    label: 'Bloedlijnen'
+    label_singular: 'Bloedlijn'
+    folder: src/content/bloedlijnen
+    create: true
+    identifier_field: naam
+    fields:
+      - { label: 'Naam', name: naam, widget: string }
+      - { label: 'Oorsprong', name: oorsprong, widget: string, hint: 'Korte herkomst — waar komt de lijn vandaan, wie legde de basis' }
+      - { label: 'Verhaal', name: body, widget: markdown, required: false, hint: 'Waarom deze combinatie, welke eigenschappen worden doorgegeven' }
+
+  - name: verhalen
+    label: 'Verhalen'
+    label_singular: 'Verhaal'
+    folder: src/content/verhalen
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Titel', name: title, widget: string }
+      - { label: 'Auteur', name: author, widget: string }
+      - { label: 'Datum', name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
+      - label: 'Categorie'
+        name: category
+        widget: select
+        options:
+          - { label: 'Geschiedenis', value: geschiedenis }
+          - { label: 'Training', value: training }
+          - { label: 'Wedvluchtverslag', value: 'wedvlucht-verslag' }
+          - { label: 'Jaaroverzicht', value: jaaroverzicht }
+      - { label: 'Samenvatting', name: excerpt, widget: text, hint: '1-2 zinnen, verschijnt in het overzicht' }
+      - label: 'Gerelateerde duiven'
+        name: gerelateerdeDuiven
+        widget: list
+        required: false
+        field:
+          label: 'Duif'
+          name: duif
+          widget: relation
+          collection: duiven
+          search_fields: [naam, ringnummer]
+          display_fields: [naam, ringnummer]
+          value_field: '{{slug}}'
+      - label: 'Gerelateerde bloedlijn'
+        name: gerelateerdeBloedlijn
+        widget: relation
+        required: false
+        collection: bloedlijnen
+        search_fields: [naam]
+        display_fields: [naam]
+        value_field: '{{slug}}'
+      - { label: 'Artikel', name: body, widget: markdown }
+
+  - name: kennis
+    label: 'Kennisbank'
+    label_singular: 'Kennisartikel'
+    folder: src/content/kennis
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Titel', name: title, widget: string }
+      - { label: 'Volgorde', name: order, widget: number, value_type: int, hint: 'Bepaalt de plek in het menu' }
+      - { label: 'Samenvatting', name: excerpt, widget: text }
+      - label: 'Gerelateerde duiven'
+        name: gerelateerdeDuiven
+        widget: list
+        required: false
+        field:
+          label: 'Duif'
+          name: duif
+          widget: relation
+          collection: duiven
+          search_fields: [naam, ringnummer]
+          display_fields: [naam, ringnummer]
+          value_field: '{{slug}}'
+      - label: 'Gerelateerde bloedlijn'
+        name: gerelateerdeBloedlijn
+        widget: relation
+        required: false
+        collection: bloedlijnen
+        search_fields: [naam]
+        display_fields: [naam]
+        value_field: '{{slug}}'
+      - label: "Gerelateerde foto's"
+        name: gerelateerdeMedia
+        widget: list
+        required: false
+        hint: "Eerste foto wordt ook als thumbnail gebruikt op de kennisbank-index"
+        field:
+          label: 'Foto'
+          name: item
+          widget: relation
+          collection: media
+          search_fields: [caption]
+          display_fields: [caption, datum]
+          value_field: '{{slug}}'
+      - { label: 'Artikel', name: body, widget: markdown }
+
+  - name: prestaties
+    label: 'Prestaties'
+    label_singular: 'Prestatie'
+    folder: src/content/prestaties
+    create: true
+    identifier_field: titel
+    fields:
+      - { label: 'Jaar', name: jaar, widget: number, value_type: int, required: false }
+      - { label: 'Periode', name: periode, widget: string, required: false, hint: "Bijv. 'seizoen 2025' als jaar niet precies genoeg is" }
+      - { label: 'Titel', name: titel, widget: string }
+      - { label: 'Niveau', name: niveau, widget: string, hint: 'Bijv. Hok, Afdeling, Nationaal' }
+      - { label: 'Volgorde', name: volgorde, widget: number, value_type: int, hint: 'Bepaalt de sortering op de erelijst' }
+      - label: 'Duif'
+        name: duif
+        widget: relation
+        required: false
+        collection: duiven
+        search_fields: [naam, ringnummer]
+        display_fields: [naam, ringnummer]
+        value_field: '{{slug}}'
+      - { label: 'Toelichting', name: body, widget: markdown, required: false }
+
+  - name: fanciers
+    label: 'Familie'
+    label_singular: 'Familielid'
+    folder: src/content/fanciers
+    create: true
+    identifier_field: naam
+    fields:
+      - { label: 'Naam', name: naam, widget: string }
+      - { label: 'Slagnaam', name: slagnaam, widget: string, required: false }
+      - { label: 'Periode', name: periode, widget: string }
+      - label: 'Rol'
+        name: rol
+        widget: select
+        options:
+          - { label: 'Grondlegger', value: grondlegger }
+          - { label: 'Huidige generatie', value: 'huidige generatie' }
+      - { label: 'Verhaal', name: body, widget: markdown, required: false }
+
+  - name: media
+    label: "Foto's"
+    label_singular: 'Foto'
+    folder: src/content/media
+    create: true
+    identifier_field: caption
+    media_folder: '../../assets/media'
+    public_folder: '../../assets/media'
+    fields:
+      - { label: 'Onderschrift', name: caption, widget: text }
+      - { label: 'Datum', name: datum, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
+      - label: 'Gerelateerde duif'
+        name: gerelateerdeDuif
+        widget: relation
+        required: false
+        collection: duiven
+        search_fields: [naam, ringnummer]
+        display_fields: [naam, ringnummer]
+        value_field: '{{slug}}'
+      - label: 'Gerelateerde bloedlijn'
+        name: gerelateerdeBloedlijn
+        widget: relation
+        required: false
+        collection: bloedlijnen
+        search_fields: [naam]
+        display_fields: [naam]
+        value_field: '{{slug}}'
+      - label: 'Gerelateerde prestatie'
+        name: gerelateerdePrestatie
+        widget: relation
+        required: false
+        collection: prestaties
+        search_fields: [titel]
+        display_fields: [titel, jaar]
+        value_field: '{{slug}}'
+      - { label: 'Foto', name: foto, widget: image }
