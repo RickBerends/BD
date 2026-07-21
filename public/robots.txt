@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rickberends.github.io/BD/sitemap-index.xml
+Sitemap: https://berendsduiven.nl/sitemap-index.xml

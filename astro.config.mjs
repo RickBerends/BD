@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const BASE = '/BD';
+const BASE = '';
 
 const legacyRedirects = {
   '/2.Historie.html': '/familie/',
@@ -39,8 +39,8 @@ const redirects = Object.fromEntries(
 );
 
 export default defineConfig({
-  site: 'https://rickberends.github.io',
-  base: BASE,
+  site: 'https://berendsduiven.nl',
+  base: '/',
   trailingSlash: 'always',
   redirects,
   integrations: [
