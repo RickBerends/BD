@@ -7,7 +7,13 @@ import path from 'node:path';
 // in dist/ wijzen. Draait in CI vóór deploy (zie .github/workflows/deploy.yml).
 
 const DIST = 'dist';
-const BASE = '/BD/';
+
+// Base wordt uit astro.config.mjs gelezen in plaats van hardcoded, zodat
+// deze check niet stilzwijgend 0 links controleert wanneer het base-pad
+// wijzigt (zoals gebeurde bij de overstap naar het eigen domein: '/BD' -> '').
+const astroConfig = await readFile('astro.config.mjs', 'utf8');
+const baseMatch = astroConfig.match(/const BASE = '([^']*)'/);
+const BASE = baseMatch ? `${baseMatch[1]}/` : '/';
 
 async function htmlFiles(dir) {
   const out = [];
@@ -36,7 +42,7 @@ for (const file of files) {
   const html = await readFile(file, 'utf8');
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     const url = match[1];
-    if (!url.startsWith(BASE)) continue; // extern, mailto, anchors, data:
+    if (!url.startsWith(BASE) || url.startsWith('//')) continue; // extern, mailto, anchors, data:
     checked++;
     if (!targetsFor(url).some((t) => existsSync(t))) {
       broken.push(`${file} -> ${url}`);

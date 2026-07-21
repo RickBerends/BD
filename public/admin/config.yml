@@ -8,9 +8,9 @@ backend:
   base_url: https://bd-cms-auth.REPLACE-ME.workers.dev
   auth_endpoint: auth
 
-site_url: https://rickberends.github.io/BD/
-display_url: https://rickberends.github.io/BD/
-logo_url: /BD/favicon.svg
+site_url: https://berendsduiven.nl/
+display_url: https://berendsduiven.nl/
+logo_url: /favicon.svg
 locale: 'nl'
 
 media_folder: src/assets/uploads

@@ -98,27 +98,16 @@ zonder Cloudflare ertussen.
    een `CNAME`-bestand aan in de root van de gepubliceerde site.
 4. Zodra het vinkje **Enforce HTTPS** beschikbaar is, zet die aan.
 
-## Stap 7 — Code aanpassen: base-pad verwijderen
+## Stap 7 — Code aanpassen: base-pad verwijderen (al gedaan)
 
-De site draait nu met `base: '/BD'` in `astro.config.mjs`, omdat GitHub Pages
-zonder eigen domein de site op een subpad serveert
-(`rickberends.github.io/BD/`). Met een eigen domein draait de site vanaf de
-root, dus moet dat eruit:
-
-```js
-// astro.config.mjs
-export default defineConfig({
-  site: 'https://berendsduiven.nl',   // was: https://rickberends.github.io
-  base: '/',                           // was: '/BD'
-  // ...
-});
-```
-
-Let op: dit raakt ook de `legacyRedirects`-lijst in hetzelfde bestand (die
-gebruikt `BASE` als prefix) en de `robots.txt`/sitemap-verwijzingen. Vraag
-mij (Claude) om deze wijziging door te voeren zodra het domein daadwerkelijk
-actief is — dit is bewust nog niet gedaan, want tot die tijd moet de site op
-`rickberends.github.io/BD/` blijven werken.
+De site draaide eerst met `base: '/BD'` in `astro.config.mjs`, omdat GitHub
+Pages zonder eigen domein de site op een subpad serveert
+(`rickberends.github.io/BD/`). Deze stap is inmiddels al doorgevoerd: `site`
+staat op `https://berendsduiven.nl`, `base` op `/`, en het `CNAME`-bestand
+staat in de repo. Ook de losse verwijzingen in `public/site.webmanifest` en
+`public/admin/config.yml` zijn meegenomen. Alleen de Cloudflare-kant
+hieronder (stappen 1&ndash;5) en het instellen van het domein bij GitHub Pages
+(stap 6) moeten dus nog gebeuren.
 
 ## Stap 8 — Controleren
 
