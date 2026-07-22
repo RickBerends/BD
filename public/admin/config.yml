@@ -5,7 +5,7 @@ backend:
   # Cloudflare Worker die de GitHub OAuth-uitwisseling doet (GitHub Pages kan
   # dat zelf niet, want daar is geen server). Zie context/hoe-voeg-ik-content-toe.md
   # voor de installatie-instructies (sveltia-cms-auth op Cloudflare Workers).
-  base_url: https://bd-cms-auth.REPLACE-ME.workers.dev
+  base_url: https://sveltia-cms-auth.rickberends10.workers.dev
   auth_endpoint: auth
 
 site_url: https://berendsduiven.nl/
