@@ -18,10 +18,11 @@ Cloudflare meedoet en zodra er ooit analytics bijkomt (checklists hieronder).
 
 ## Wat er nu gebeurt met bezoekersdata
 
-- **Geen analytics, geen trackingscripts, geen cookies.** Doorzocht op
-  Google Analytics, Plausible, GoatCounter, Facebook Pixel en vergelijkbare
-  scripts — niets aanwezig op bezoeker-pagina's. `document.cookie` wordt nergens in
-  de code gebruikt.
+- **Cloudflare Web Analytics, cookievrij.** Sinds juli 2026 draait er één
+  analytics-script (`src/layouts/BaseLayout.astro`) — Cloudflare Web Analytics,
+  gekozen omdat het geen cookies plaatst en geen individuele bezoekers volgt, alleen
+  geaggregeerde statistiek bijhoudt. `document.cookie` wordt nergens in de code
+  gebruikt.
 - **`localStorage`, alleen functioneel.** `src/layouts/BaseLayout.astro` en
   `src/components/Nav.astro` gebruiken twee sleutels — `bd-theme` (licht/donker) en
   `bd-fontsize` (tekstgrootte) — puur om een voorkeur te onthouden in de browser
@@ -83,13 +84,12 @@ zodat die er meteen bij kunnen zodra ze gebouwd worden.
 
 ## Checklist: als er ooit analytics bijkomt (roadmap §C4)
 
-- [ ] Kies een **cookievrije** optie (Cloudflare Web Analytics, GoatCounter, of
-      Plausible zonder cookies) — dat is al de intentie in
-      `context/roadmap.md`/`context/cloudflare-setup.md`, puur om geen
-      cookiebanner nodig te hebben (past bij de rustige uitstraling voor de
-      doelgroep).
-- [ ] Werk de privacyverklaring bij zodra dit gebeurt, met welke tool en dat het
-      cookievrij/geaggregeerd is.
+- [x] Kies een **cookievrije** optie — gekozen: **Cloudflare Web Analytics**,
+      geen cookies, past bij de rustige uitstraling voor de doelgroep en hergebruikt
+      het Cloudflare-account dat al voor DNS/CDN gebruikt wordt.
+- [x] Werk de privacyverklaring bij zodra dit gebeurt, met welke tool en dat het
+      cookievrij/geaggregeerd is — zie `src/pages/privacyverklaring/index.astro`,
+      sectie "Cookies en analytics".
 
 ## Als er ooit een derde persoon in tekst of foto's voorkomt
 

@@ -41,7 +41,7 @@ The site's ceiling. All tooling exists; this is human work.
 - **C1. SEO foundation**: `@astrojs/sitemap`, `robots.txt`, canonical URLs, JSON-LD structured data (Organization, Article for verhalen/kennis, BreadcrumbList — breadcrumbs already exist visually), per-page `og:image` (generate branded social cards at build time with sharp, already a devDependency).
 - **C2. RSS feed** for verhalen (`@astrojs/rss`) — the pigeon community follows blogs; cheap and fitting.
 - **C3. Real contact form backend**: replace mailto handoff with a serverless submission (Resend per original plan, or a static-friendly service like Formspree since GitHub Pages has no server runtime — decision point; Resend requires moving to Vercel or adding a function host). Include honeypot spam protection.
-- **C4. Analytics** (cookieless, no banner — brief demands rust): Plausible (~€9/mo) or GoatCounter (free). Decision point.
+- ~~**C4. Analytics**~~ — **Decided & shipped: Cloudflare Web Analytics** (free, cookieless, no banner — reuses the Cloudflare account already used for DNS/CDN instead of adding a new vendor). Beacon script lives in `src/layouts/BaseLayout.astro`.
 - **C5. Custom domain**: buy domain (user: "deal with later" — slot is here when ready), configure GitHub Pages custom domain + HTTPS, drop the `/BD` base path (`astro.config.mjs` change), keep redirects.
 - **C6. Accessibility hardening for the 50–70+ audience**: font-size toggle control (A/A+/A++ persisted in localStorage), full keyboard-nav audit, focus-visible styles, WCAG AA contrast verification in both themes, manual dark-mode toggle (currently system-only).
 - **C7. Print stylesheet** — this audience prints articles and pedigrees; clean `@media print` for verhalen, kennis, and (later) duif profiles/pedigrees.
@@ -98,7 +98,7 @@ The site's ceiling. All tooling exists; this is human work.
 | 1 | CMS | **Decided: Decap CMS** (git-based, direct-to-`master` publish) |
 | 2 | Hosting | Stay GitHub Pages vs. **Vercel when C3/E1 needs functions** |
 | 3 | Contact backend | **Formspree now (works on Pages)** vs. Resend (needs functions) |
-| 4 | Analytics | **GoatCounter (free)** vs. Plausible (€9/mo) |
+| 4 | Analytics | **Decided: Cloudflare Web Analytics** (free, cookieless, no new vendor) |
 | 5 | Domain name | Which name + when (user: later) |
 | 6 | Guestbook | giscus vs. moderated form vs. skip |
 | 7 | Talen (Phase G) | EN certain; DE/FR confirm with Henk |
