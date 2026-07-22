@@ -10,10 +10,11 @@ en configuratie staat.
 De site is op dit moment **laag risico**: geen tracking, geen cookies (op één
 functioneel voorkeurs-item na), geen eigen server die bezoekersgegevens opslaat, en
 het contactformulier stuurt gewoon een e-mail vanaf het eigen apparaat van de
-bezoeker. Er is precies **één echte lacune**: er staat nergens een
-privacyverklaring, terwijl er wel een contactformulier is en er straks (via
-Cloudflare/GitHub Pages) IP-adressen van bezoekers verwerkt worden. Dat is met één
-pagina op te lossen — zie hieronder.
+bezoeker. De ene lacune die deze check opleverde — geen privacyverklaring, terwijl
+er wel een contactformulier is en er straks (via Cloudflare/GitHub Pages)
+IP-adressen van bezoekers verwerkt worden — staat inmiddels al live op
+`/privacyverklaring/`. Wat resteert zijn twee kleine bijwerk-momenten later: zodra
+Cloudflare meedoet en zodra er ooit analytics bijkomt (checklists hieronder).
 
 ## Wat er nu gebeurt met bezoekersdata
 
@@ -57,24 +58,18 @@ De GitHub OAuth-Cloudflare-Worker voor de CMS-login (`public/admin/config.yml`,
 momenteel nog een niet-gebouwde placeholder-URL) is alleen relevant voor Henk en
 Rick als redacteuren, niet voor bezoekers — geen actie nodig hiervoor.
 
-## De ene echte actie: een privacyverklaring-pagina
+## De ene echte actie: een privacyverklaring-pagina (al gedaan)
 
-Maak een korte pagina (bijvoorbeeld `/privacy`) met:
-
-- **Wie is verantwoordelijk** — Henk Berends, met het al bestaande contactadres.
-- **Welke gegevens er verwerkt worden** — wat iemand zelf invult in het
-  contactformulier (gaat direct als e-mail, niet opgeslagen op de site), en de
-  IP-/verzoeklogs die Cloudflare en GitHub Pages standaard bijhouden.
-- **Geen cookies, geen tracking** — alleen de functionele
-  `localStorage`-voorkeuren, die niet gedeeld worden en nooit de browser verlaten.
-- **Bewaartermijn** — logs bij Cloudflare/GitHub vervallen volgens hun eigen
-  standaardtermijnen; er wordt verder niets bewaard.
-- **Rechten van bezoekers** — inzage, correctie of verwijdering aanvragen kan via
-  hetzelfde contactadres dat al op de site staat.
-
-Zet een link naar deze pagina in de footer, naast Contact. Dit is de enige
-concrete bouwstap uit deze check — niet in dit document zelf gebouwd, wel hier als
-actiepunt genoteerd.
+Deze stap is inmiddels al doorgevoerd: `src/pages/privacyverklaring/index.astro`
+bevat een korte pagina met wie verantwoordelijk is, wat het contactformulier wel/niet
+doet, hoe er met gepubliceerde familiegegevens wordt omgegaan, dat er geen
+cookies/tracking zijn, wat hosting verwerkt, en hoe bezoekers een inzage-/
+correctie-/verwijderverzoek kunnen doen. De footer linkt er al naar toe. Daarnaast
+is er een intern (niet-gepubliceerd) `context/privacy-verwerkingsregister.md` dat
+per dataverwerking bijhoudt: bron, grondslag, opslaglocatie, bewaartermijn en
+eventuele externe verwerker — met alvast plaatsen klaarstaand voor Cloudflare,
+analytics, een echte contactformulier-backend en een eventuele veiling/accounts,
+zodat die er meteen bij kunnen zodra ze gebouwd worden.
 
 ## Checklist: als Cloudflare + eigen domein volledig live gaan
 
