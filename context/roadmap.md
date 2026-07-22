@@ -2,38 +2,31 @@
 
 ## Context
 
-This document supersedes and consolidates all prior plans: the original build plan (`context/plan.md`), the vision brief (`context/briefing.md`), and the earlier "like to love" plan. It is the single exhaustive list of everything still to implement, from tomorrow's quick wins to the full end-state vision — a digital heritage platform with the craftsmanship of a Rolex Museum, the presentation of Sotheby's, the knowledge structure of Wikipedia, and the personal feel of one's own digital loft.
+This document supersedes and consolidates all prior plans (the original build plan and vision brief, both since removed as fully superseded/operationalized). It is the single exhaustive list of everything still to implement, from tomorrow's quick wins to the full end-state vision — a digital heritage platform with the craftsmanship of a Rolex Museum, the presentation of Sotheby's, the knowledge structure of Wikipedia, and the personal feel of one's own digital loft.
 
-**What is already live** (Fase 0 + Fase 1 + like-to-love pass, deployed to GitHub Pages from `master`):
-Astro site with warm heritage design system (Fraunces/Inter, wood/brass/parchment, dark mode, reduced-motion support); all real 2015 content migrated and rewritten (familie, 4 kennis articles, 2 verhalen, 4 prestaties, 2 fanciers); images compressed 8.4MB→<150KB; legacy site archived under `legacy-site/` with 301 redirects and a real 404; Pagefind search; working contact form (mailto-based); breadcrumbs; editorial empty states with nav "in wording" signals; paper-texture dividers, museum-placard photo framing, scroll-reveal, pull-quotes, drop caps; `RelatedEntries` cross-link scaffold (verified working, renders nothing until content exists); content-sourcing brief + fill-in templates for Henk (`context/content-brief-henk.md`, `context/content-template-duif.md`, `context/content-template-bloedlijn.md`); GitHub Actions deploy pipeline; **Decap CMS live at `/admin/`** — Henk and Rick edit all 7 content collections through a Dutch-language form UI (searchable relation pickers instead of typed filenames, drag-and-drop photo upload), publishing directly to `master`; GitHub login proxied through a Cloudflare Worker (`sveltia-cms-auth`); access controlled via repo collaborator permissions, not the OAuth app itself.
+**What is already live** (deployed to GitHub Pages from `master`):
+Astro site with warm heritage design system (Fraunces/Inter, wood/brass/parchment, dark mode, reduced-motion support); all real content migrated and rewritten (familie, kennis articles, verhalen, prestaties, fanciers); images compressed and optimized; legacy site archived under `legacy-site/` with 301 redirects and a real 404; Pagefind search; working contact form (mailto-based); breadcrumbs; paper-texture dividers, museum-placard photo framing, scroll-reveal, pull-quotes, drop caps; `RelatedEntries` cross-link scaffold; GitHub Actions deploy pipeline; **Decap CMS live at `/admin/`** — Henk and Rick edit all content collections through a Dutch-language form UI (searchable relation pickers instead of typed filenames, drag-and-drop photo upload), publishing directly to `master`; GitHub login proxied through a Cloudflare Worker (`sveltia-cms-auth`); access controlled via repo collaborator permissions, not the OAuth app itself. Cloudflare Web Analytics is live via automatic RUM injection (see Phase C4).
 
-**The ordering principle:** content is the critical path (Phase A) — everything else multiplies its value but cannot substitute for it. Phases B–G are sequenced by dependency and impact, but many items are independent and can be picked à la carte.
+**Phase A (content acquisition) has substantially landed**, via incorporating Henk's Facebook archive (four years of training logs, race results, and bird stories): `/duiven/` (9 profiles), `/bloedlijnen/` (3), `/media/` (27 captioned photos), `kennis`, `verhalen`, and `prestaties` are all real and populated — the placeholder era is over for these sections. What remains from Phase A is a short, genuinely-outstanding tail:
 
----
+- **A1. Real ring numbers** — every `duiven/*.md` entry currently carries the placeholder `ringnummer: "onbekend – bij Henk navragen"`; ask Henk for the real numbers and fill them in (via `/admin/` or directly).
+- **A2. Veiling copy + `teKoop` flip** — the Facebook captions include real "young bird for sale" mentions, but no duif currently has `teKoop: true` and `/veiling/` still shows a permanent "coming soon" placeholder instead of a real catalog teaser. Flip the flag on the relevant birds and swap in real copy.
+- **A3. Loft/automation photography** — exterior/interior shots of the automated systems (belts, feeders, camera, timed flap) to illustrate `kennis/automatisering.md` and pair with the H5 hok-tour idea.
+- **A4. Archive digitization** — Winning/NPO clippings, trophies, diplomas, and photos of Henk sr., if they still exist.
+- **A5. The training article's sequel** — it ends with "volgende keer zal ik verder ingaan"; ask Henk for the follow-up or an epilogue note.
+- **A6. Resultaten 2010–2015** — never recovered from the old site; ask if NPO archive records exist, add as `prestatie` entries if so.
+- **A7. Wider cast for `/familie`** — mentors, combinatie-era stories, "internationale verspreiding" of the bloodline, as new `fanciers` entries.
 
-**## Phase A — Content acquisition (critical path; owner: Henk/Rick; already briefed)**
+**The ordering principle:** content was the critical path and is now largely cleared — Phases B–G are sequenced by dependency and impact, but many items are independent and can be picked à la carte.
 
-The site's ceiling. All tooling exists; this is human work.
-
-- **A1. Photography** (shot list in `context/content-brief-henk.md`): 8–10 bird portraits (head, full body, wing, ring close-up), loft interior/exterior including the automated systems (belts, feeders, camera, timed flap), training-release action shots, archive digitization (Winning/NPO clippings, trophies, diplomas, photos of Henk sr.).
-- **A2. First duif profiles** — 8–10 birds via `context/content-template-duif.md` into `src/content/duiven/`. This single step flips `/duiven/` from placeholder to gallery, activates `RelatedEntries` links, removes the nav dot.
-- **A3. First bloedlijnen** — 2–3 entries via `context/content-template-bloedlijn.md`; unlocks `/bloedlijnen/` and the Phase B stamboom work.
-- **A4. Media captions** — replace the two placeholder captions in `src/pages/media/index.astro`; source more archive photos.
-- **A5. Missing/incomplete texts**:
-  - The training article ends with "volgende keer zal ik verder ingaan" — ask Henk for the sequel (or an epilogue note).
-  - `4.6 Automatisering` was never written ("Work on road") — the family story already describes the systems; draft a full kennis article from that + interview, illustrated with A1 loft photos. Add as `src/content/kennis/automatisering.md` (order: 5).
-  - Resultaten 2010–2015 were never filled in on the old site — ask if records exist (NPO archives?); each recovered season becomes `prestatie` entries.
-  - Wider cast for `/familie`: mentors, combinatie-era stories, "internationale verspreiding" of the bloodline — new `fanciers` entries.
-- **A6. Voerschema graphic** — the voeding article references a schema "hieronder te zien" that never existed on the old site; get it from Henk and render as an accessible HTML table.
-
-## Phase B — Duivenarchief & Bloedlijnen come alive (code; starts the day A2/A3 content lands)
+## Phase B — Duivenarchief & Bloedlijnen come alive (code; content has landed, can start now)
 
 - **B1. Duif profile page upgrade** (`src/pages/duiven/[slug].astro`): museum-placard layout — framed portrait (reuse `.portrait-frame` from `src/pages/index.astro`), specs as engraved plaque, story as wall text; per-duif prestaties (add `duif`-reference field to `prestaties` schema in `src/content.config.ts`); **automatic nakomelingen** via reverse lookup (query all duiven whose `vader`/`moeder` = this id — the "elke nieuwe duif voegt een hoofdstuk toe" mechanic from the brief, zero manual work).
 - **B2. Gallery filters** (`src/pages/duiven/index.astro`): filter by geslacht / kweek-vlieg / bloedlijn / te-koop. Static-friendly: small client-side script or pre-rendered filter routes; photo-card grid replacing text cards.
 - **B3. Pedigree view v1** — 3-generation stamboom on each duif profile as pure HTML/CSS grid (no heavy library), built from `vader`/`moeder` references; each ancestor clickable if profiled, plain text if not.
 - **B4. Bloedlijn detail pages** (`/bloedlijnen/[slug]`): story of the line + auto-listed member duiven + founding pair pedigree.
 - **B5. Interactive stamboom v2** (once ≥15–20 linked birds): zoomable/pannable family tree of the whole stam — the brief's "interactieve stamboom." Evaluate d3-hierarchy vs. hand-rolled SVG; keep it an Astro island so the rest stays static.
-- **B6. Prestaties-tijdlijn upgrade**: true vertical timeline component (plan.md §4 named it; current version is a card grid) — brass spine, year markers, entries linking to the duif that flew them.
+- **B6. Prestaties-tijdlijn upgrade**: true vertical timeline component — brass spine, year markers, entries linking to the duif that flew them.
 - ~~**B7. "Hoe voeg ik een duif toe"-instructie** for Henk~~ — **Superseded by D1**: `context/hoe-voeg-ik-content-toe.md` now documents the Decap CMS flow as the primary path, with the old GitHub web-editor instructions kept as a documented fallback appendix.
 
 ## Phase C — Trust, reach & robustness (code-only; no content dependency; can start now)
@@ -41,7 +34,7 @@ The site's ceiling. All tooling exists; this is human work.
 - **C1. SEO foundation**: `@astrojs/sitemap`, `robots.txt`, canonical URLs, JSON-LD structured data (Organization, Article for verhalen/kennis, BreadcrumbList — breadcrumbs already exist visually), per-page `og:image` (generate branded social cards at build time with sharp, already a devDependency).
 - **C2. RSS feed** for verhalen (`@astrojs/rss`) — the pigeon community follows blogs; cheap and fitting.
 - **C3. Real contact form backend**: replace mailto handoff with a serverless submission (Resend per original plan, or a static-friendly service like Formspree since GitHub Pages has no server runtime — decision point; Resend requires moving to Vercel or adding a function host). Include honeypot spam protection.
-- ~~**C4. Analytics**~~ — **Decided & shipped: Cloudflare Web Analytics** (free, cookieless, no banner — reuses the Cloudflare account already used for DNS/CDN instead of adding a new vendor). Beacon script lives in `src/layouts/BaseLayout.astro`.
+- ~~**C4. Analytics**~~ — **Decided & shipped: Cloudflare Web Analytics** (free, cookieless, no banner — reuses the Cloudflare account already used for DNS/CDN instead of adding a new vendor). Enabled via Cloudflare's **Automatic RUM injection** (dashboard → Analytics & Logs → Web Analytics), not a hardcoded beacon script — no token lives in the source.
 - **C5. Custom domain**: buy domain (user: "deal with later" — slot is here when ready), configure GitHub Pages custom domain + HTTPS, drop the `/BD` base path (`astro.config.mjs` change), keep redirects.
 - **C6. Accessibility hardening for the 50–70+ audience**: font-size toggle control (A/A+/A++ persisted in localStorage), full keyboard-nav audit, focus-visible styles, WCAG AA contrast verification in both themes, manual dark-mode toggle (currently system-only).
 - **C7. Print stylesheet** — this audience prints articles and pedigrees; clean `@media print` for verhalen, kennis, and (later) duif profiles/pedigrees.
@@ -58,7 +51,7 @@ The site's ceiling. All tooling exists; this is human work.
 - ~~**D3. Image pipeline for Henk**~~ — **Resolved by D1**: Decap's drag-and-drop image widget writes directly into `src/assets/duiven/`/`src/assets/media/`; Astro's existing build-time image optimization handles compression/output, same as hand-authored content.
 - ~~**D4. Editorial workflow**~~ — **Rejected, not merely pending.** A PR-preview review step was considered and explicitly declined in favor of direct-to-`master` publishing (matches how content already worked, keeps Henk's flow to a single "Publish" click). Do not re-introduce this without a fresh decision — it would contradict the D1 publish-mode choice.
 
-## Phase E — De Veiling (the brief's Sotheby's pillar; needs A-content + D2)
+## Phase E — De Veiling (the brief's Sotheby's pillar; A-content has landed, needs A2's `teKoop` flip + D2)
 
 - **E1. Veiling v1 — catalogus & interesse**: auction listing page per duif (`teKoop: true` birds auto-appear), presented as provenance stories — framed portrait, pedigree, prestaties, "welke toekomst kan deze duif betekenen voor uw hok" — never "product X, prijs Y". Interest registration form (no bidding); Henk follows up personally. Fully static-capable.
 - **E2. Veiling v2 — gestructureerd bieden**: timed auctions with bid registry. Supabase (Postgres + realtime, free tier) as transactional layer beside the content layer, per original plan §Fase 3. Explicitly **no integrated payment processing** — bids are commitments settled personally (avoids escrow/compliance for what remain physical handovers). Email notifications on outbid/close via Resend.
@@ -108,10 +101,10 @@ The site's ceiling. All tooling exists; this is human work.
 1. **C1, C2, C8, C10, C11** — SEO/RSS/perf/favicon/search: pure code, immediate, invisible-but-compounding. (~1 session)
 2. **C6, C7** — accessibility toggle, print styles: highest-fit for the audience. (~1 session)
 3. **C9** — CI gates so Henk's future content edits can't break the site. (small)
-4. **B1–B4, B6, B7** — build the full duivenarchief experience against 1–2 sample entries, ready to light up when A-content lands. (~2 sessions)
-5. ~~**D1**~~ — done: Decap CMS live, A-content can now be entered by the family directly through `/admin/`.
-6. **C3, C4** — real form + analytics (may trigger D2 hosting move).
-7. **A-content lands** → activate everything, then **E1** veiling v1.
+4. **B1–B4, B6, B7** — build the full duivenarchief experience against the now-real content (9 duiven, 3 bloedlijnen). (~2 sessions)
+5. ~~**D1**~~ — done: Decap CMS live, family can enter/edit content directly through `/admin/`.
+6. ~~**C4**~~ — done (Cloudflare Web Analytics). **C3** — real contact form backend still open.
+7. **A2 (`teKoop` flip + veiling copy)** → then **E1** veiling v1.
 8. **B5, E2–E4, F, G, H** as content, needs, and appetite grow.
 
 ## Verification (applies per phase)

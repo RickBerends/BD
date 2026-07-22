@@ -124,8 +124,7 @@ hieronder (stappen 1&ndash;5) en het instellen van het domein bij GitHub Pages
 - **Page Rules / Cache Rules**: agressievere caching instellen voor
   `/_astro/*` (de gehashte, onveranderlijke build-assets) — versnelt
   herhaalbezoeken.
-- **Web Analytics**: Cloudflare heeft gratis, cookieloze analytics — sluit
-  aan bij de eis uit `context/briefing.md` om geen cookiebanner nodig te
-  hebben (zie ook roadmap §C4, naast het al genoemde GoatCounter/Plausible).
+- **Web Analytics**: Cloudflare heeft gratis, cookieloze analytics — geen
+  cookiebanner nodig, inmiddels ook al gedaan (zie roadmap §C4).
 - **E-mailadres op het domein** (bijvoorbeeld `info@berendsduiven.nl`) kan
   via Cloudflare Email Routing, gratis, zonder eigen mailserver.

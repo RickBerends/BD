@@ -9,7 +9,7 @@ niet uit de losse pols wordt bijgewerkt.
 | Naam, e-mail, onderwerp, bericht (contactformulier) | Bezoeker vult formulier in | Gerechtvaardigd belang (contact opnemen) | Nergens — `mailto:`-link, verzending gebeurt door bezoeker zelf vanuit eigen mailbox | N.v.t. (komt nooit op de server) | Geen |
 | Familiegegevens (namen, geboortejaren, gezinssituatie, loopbaan) | Zelf aangeleverd door de familie | Toestemming / redactionele publicatie door de familie zelf | Git-repository (`src/content/fanciers/`), gepubliceerd op de site | Onbepaald, op verzoek aan te passen/verwijderen | Geen |
 | IP-adres / verbindingsgegevens (bezoekers) | Elke sitebezoeker | Gerechtvaardigd belang (site laten werken) | Bij hostingpartij (GitHub Pages) | Bepaald door hostingpartij, niet door ons | GitHub (Pages hosting) |
-| Geaggregeerde bezoekstatistieken (paginaweergaven, referrers, land) | Elke sitebezoeker, via Cloudflare Web Analytics-beacon in `src/layouts/BaseLayout.astro` | Gerechtvaardigd belang (inzicht in bezoek, siteverbetering) | Cloudflare (geen cookies, IP kort verwerkt voor aggregatie, niet herleidbaar naar individu) | Bepaald door Cloudflare, niet door ons | Cloudflare (Web Analytics) |
+| Geaggregeerde bezoekstatistieken (paginaweergaven, referrers, land) | Elke sitebezoeker, via Cloudflare Web Analytics' automatische RUM-injectie (Cloudflare-dashboard, geen script/token in de broncode) | Gerechtvaardigd belang (inzicht in bezoek, siteverbetering) | Cloudflare (geen cookies, IP kort verwerkt voor aggregatie, niet herleidbaar naar individu) | Bepaald door Cloudflare, niet door ons | Cloudflare (Web Analytics) |
 
 ## Nog toe te voegen zodra live (zie plan GDPR-check)
 

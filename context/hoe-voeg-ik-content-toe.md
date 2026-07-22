@@ -6,7 +6,7 @@ invullen.
 
 ## Inloggen
 
-1. Ga naar **https://rickberends.github.io/BD/admin/**.
+1. Ga naar **https://berendsduiven.nl/admin/**.
 2. Klik op **Login with GitHub** en meld je aan met je eigen GitHub-account
    (de eerste keer moet je de app even goedkeuren — dat hoeft daarna niet
    meer).

@@ -2,8 +2,7 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 // Contentmodel volgt de Familie -> Stam -> Duif -> Nakomelingen -> Prestaties
-// keten uit context/briefing.md, als lokale collecties (zie context/plan.md §3
-// voor het toekomstige Sanity-schema waar dit 1-op-1 naar migreert).
+// keten, als lokale markdown-collecties (git-based, bewerkt via Decap CMS).
 
 // gerelateerdeDuiven/gerelateerdeBloedlijn verwijzen naar entry-id's (bestandsnaam
 // zonder extensie) in de duiven/bloedlijnen-collecties. Optioneel en leeg tot die

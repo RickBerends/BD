@@ -18,11 +18,11 @@ Cloudflare meedoet en zodra er ooit analytics bijkomt (checklists hieronder).
 
 ## Wat er nu gebeurt met bezoekersdata
 
-- **Cloudflare Web Analytics, cookievrij.** Sinds juli 2026 draait er één
-  analytics-script (`src/layouts/BaseLayout.astro`) — Cloudflare Web Analytics,
-  gekozen omdat het geen cookies plaatst en geen individuele bezoekers volgt, alleen
-  geaggregeerde statistiek bijhoudt. `document.cookie` wordt nergens in de code
-  gebruikt.
+- **Cloudflare Web Analytics, cookievrij.** Sinds juli 2026 draait Cloudflare Web
+  Analytics via Cloudflare's **automatische RUM-injectie** (aan te zetten in het
+  Cloudflare-dashboard, geen script/token in de broncode) — gekozen omdat het geen
+  cookies plaatst en geen individuele bezoekers volgt, alleen geaggregeerde
+  statistiek bijhoudt. `document.cookie` wordt nergens in de code gebruikt.
 - **`localStorage`, alleen functioneel.** `src/layouts/BaseLayout.astro` en
   `src/components/Nav.astro` gebruiken twee sleutels — `bd-theme` (licht/donker) en
   `bd-fontsize` (tekstgrootte) — puur om een voorkeur te onthouden in de browser
